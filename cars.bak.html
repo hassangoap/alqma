@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CARS-2 Assessment</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+
+font-family:Tahoma,Arial;
+background:#f3f6fb;
+color:#1f2937;
+
+}
+
+
+.header{
+
+background:linear-gradient(135deg,#2563eb,#1e40af);
+color:white;
+padding:25px;
+
+}
+
+
+.header h1{
+
+text-align:center;
+
+}
+
+
+
+.container{
+
+max-width:1100px;
+margin:30px auto;
+padding:15px;
+
+}
+
+
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 5px 20px #0002;
+
+}
+
+
+
+/* بيانات الطفل */
+
+.info-grid{
+
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+
+}
+
+
+.info{
+
+background:#eff6ff;
+padding:15px;
+border-radius:10px;
+
+}
+
+
+.info span{
+
+display:block;
+font-size:13px;
+color:#64748b;
+
+}
+
+
+
+.info strong{
+
+color:#1d4ed8;
+
+}
+
+
+
+
+/* Progress */
+
+
+.progress{
+
+height:12px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+
+}
+
+
+.progress-bar{
+
+height:100%;
+width:0%;
+background:#2563eb;
+
+}
+
+
+
+
+/* Question */
+
+
+.question{
+
+border:1px solid #ddd;
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+
+}
+
+
+.question h3{
+
+color:#1d4ed8;
+margin-bottom:10px;
+
+}
+
+
+
+.description{
+
+color:#555;
+margin-bottom:15px;
+line-height:1.8;
+
+}
+
+
+
+.scores{
+
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+
+}
+
+
+
+.score{
+
+border:1px solid #cbd5e1;
+padding:12px;
+text-align:center;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+
+
+.score input{
+
+display:none;
+
+}
+
+
+
+.score.active{
+
+background:#2563eb;
+color:white;
+
+}
+
+
+
+textarea{
+
+width:100%;
+margin-top:15px;
+height:80px;
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+
+}
+
+
+
+
+
+button{
+
+padding:14px 30px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+
+
+@media(max-width:700px){
+
+.info-grid{
+
+grid-template-columns:1fr 1fr;
+
+}
+
+
+.scores{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="header">
+
+<h1>
+CARS-2
+<br>
+مقياس تقييم التوحد
+</h1>
+
+</div>
+
+
+
+<div class="container">
+
+
+
+<div class="card">
+
+
+<h2>
+بيانات الطفل
+</h2>
+
+<br>
+
+
+<div class="info-grid">
+
+
+<div class="info">
+
+<span>
+الاسم
+</span>
+
+<strong id="name">
+-
+</strong>
+
+</div>
+
+
+<div class="info">
+
+<span>
+العمر
+</span>
+
+<strong id="age">
+-
+</strong>
+
+</div>
+
+
+
+<div class="info">
+
+<span>
+الأخصائي
+</span>
+
+<strong id="specialist">
+-
+</strong>
+
+</div>
+
+
+
+<div class="info">
+
+<span>
+التاريخ
+</span>
+
+<strong id="date">
+-
+</strong>
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+نسبة الإنجاز
+</h2>
+
+<br>
+
+
+<div class="progress">
+
+<div 
+class="progress-bar"
+id="bar">
+</div>
+
+</div>
+
+
+<br>
+
+
+<span id="count">
+
+0 / 15
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div id="questions"></div>
+
+
+
+
+
+
+
+<div class="card">
+
+<button onclick="finishAssessment()">
+
+حفظ النتيجة
+
+</button>
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<script src="cars-data.js"></script>
+
+<script>
+
+
+// بيانات الطفل
+
+let child =
+JSON.parse(
+localStorage.getItem("assessmentData")
+);
+
+
+
+if(child){
+
+
+name.textContent =
+child.childName;
+
+
+age.textContent =
+child.age;
+
+
+specialist.textContent =
+child.specialistName;
+
+
+date.textContent =
+child.evaluationDate;
+
+
+}
+
+
+
+
+
+
+// عرض البنود
+
+
+function loadQuestions(){
+
+
+let html="";
+
+
+carsQuestions.forEach(q=>{
+
+
+html += `
+
+
+<div class="question">
+
+
+<h3>
+
+${q.id} - ${q.title}
+
+</h3>
+
+
+<div class="description">
+
+${q.description}
+
+</div>
+
+
+
+<div class="scores">
+
+
+${createScore(q.id,1)}
+
+${createScore(q.id,2)}
+
+${createScore(q.id,3)}
+
+${createScore(q.id,4)}
+
+
+</div>
+
+
+<textarea
+id="note_${q.id}"
+placeholder="ملاحظات الأخصائي">
+
+</textarea>
+
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+questions.innerHTML=html;
+
+
+}
+
+
+
+
+
+
+
+function createScore(id,value){
+
+
+return `
+
+
+<label 
+class="score"
+onclick="selectScore(this)">
+
+
+<input
+
+type="radio"
+
+name="q${id}"
+
+value="${value}"
+
+>
+
+
+الدرجة ${value}
+
+
+</label>
+
+
+`;
+
+}
+
+
+
+
+
+
+
+function selectScore(el){
+
+
+let parent =
+el.parentElement;
+
+
+parent
+.querySelectorAll(".score")
+.forEach(x=>{
+
+x.classList.remove("active");
+
+});
+
+
+
+el.classList.add("active");
+
+
+updateProgress();
+
+
+}
+
+
+
+
+
+
+
+function updateProgress(){
+
+
+let total =
+carsQuestions.length;
+
+
+
+let done =
+document.querySelectorAll(
+'input[type="radio"]:checked'
+).length;
+
+
+
+count.textContent =
+`${done} / ${total}`;
+
+
+
+bar.style.width =
+(done/total*100)+"%";
+
+
+
+}
+
+
+
+
+
+
+
+function finishAssessment(){
+
+
+let answers=[];
+
+let total=0;
+
+
+
+carsQuestions.forEach(q=>{
+
+
+let selected =
+document.querySelector(
+`input[name="q${q.id}"]:checked`
+);
+
+
+
+let score =
+selected ?
+Number(selected.value)
+:0;
+
+
+
+total += score;
+
+
+
+answers.push({
+
+id:q.id,
+
+title:q.title,
+
+score:score,
+
+note:
+document.getElementById(
+`note_${q.id}`
+).value
+
+});
+
+
+});
+
+
+
+
+
+
+localStorage.setItem(
+
+"CARS_Result",
+
+JSON.stringify({
+
+child:child,
+
+totalScore:total,
+
+answers:answers,
+
+date:new Date()
+
+})
+
+);
+
+
+
+alert(
+"تم حفظ تقييم CARS-2"
+);
+
+
+
+window.location.href=
+"cars-report.html";
+
+
+}
+
+
+
+
+
+
+
+loadQuestions();
+
+
+
+</script>
+
+
+
+</body>
+
+</html>

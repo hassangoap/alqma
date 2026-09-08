@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تقييم GARS-3</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: "Tahoma", Arial, sans-serif;
+        }
+
+        .container-main {
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .header-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.08);
+        }
+
+        .domain-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.08);
+        }
+
+        .domain-number {
+            display: inline-flex;
+            width: 45px;
+            height: 45px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #0d6efd;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .goal-box {
+            background: #eef5ff;
+            border-right: 5px solid #0d6efd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .question-card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .question-number {
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-weight: bold;
+            line-height: 1.8;
+        }
+
+        .recommendation {
+            background: #fff8e1;
+            border-right: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-top: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .score-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .score-option {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .score-option input {
+            display: none;
+        }
+
+        .score-option label {
+            display: block;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .2s;
+            background: #fff;
+        }
+
+        .score-option input:checked + label {
+            background: #0d6efd;
+            color: white;
+            border-color: #0d6efd;
+        }
+
+        .score-label {
+            display: block;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .progress {
+            height: 25px;
+            border-radius: 20px;
+        }
+
+        .progress-bar {
+            font-weight: bold;
+        }
+
+        .interpretation-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f1f3f5;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .domain-indicator {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .domain-dot {
+            flex: 1;
+            min-width: 80px;
+            padding: 8px;
+            text-align: center;
+            border-radius: 6px;
+            background: #dee2e6;
+            font-size: 12px;
+        }
+
+        .domain-dot.active {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .domain-dot.completed {
+            background: #198754;
+            color: white;
+        }
+
+        .save-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        @media(max-width: 768px) {
+            .score-option {
+                min-width: 45%;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container-main">
+
+    <!-- رأس الصفحة -->
+    <div class="header-card">
+
+        <h2 class="text-center mb-3">
+            مقياس تقييم GARS-3
+        </h2>
+
+        <p class="text-center text-muted mb-0">
+            تقييم المجالات الستة
+        </p>
+
+        <div id="domainIndicator" class="domain-indicator"></div>
+
+    </div>
+
+    <!-- المجال الحالي -->
+    <div id="domainContainer"></div>
+
+</div>
+
+<!-- ملف البيانات -->
+<script src="gars-data.js"></script>
+
+<script>
+
+"use strict";
+
+/* =========================================================
+   إعدادات عامة
+========================================================= */
+
+const STORAGE_KEY = "garsAssessment";
+
+let currentDomainIndex = 0;
+
+let assessment = {
+    domains: [],
+    currentDomain: 0,
+    lastUpdated: new Date().toISOString()
+};
+
+
+/* =========================================================
+   التحقق من وجود البيانات
+========================================================= */
+
+if (
+    typeof garsDomains === "undefined" ||
+    !Array.isArray(garsDomains) ||
+    garsDomains.length !== 6
+) {
+    document.getElementById("domainContainer").innerHTML = `
+        <div class="alert alert-danger">
+            <strong>خطأ:</strong>
+            لم يتم العثور على garsDomains أو أن عدد المجالات ليس 6.
+            <br>
+            تأكد من تحميل ملف <strong>gars-data.js</strong>.
+        </div>
+    `;
+
+    throw new Error("garsDomains غير موجود أو غير صحيح");
+}
+
+
+/* =========================================================
+   تحميل البيانات السابقة
+========================================================= */
+
+function loadAssessment() {
+
+    try {
+
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (!saved) {
+            initializeAssessment();
+            return;
+        }
+
+        const parsed = JSON.parse(saved);
+
+        if (
+            parsed &&
+            Array.isArray(parsed.domains)
+        ) {
+
+            assessment = parsed;
+
+            if (
+                typeof assessment.currentDomain !== "number" ||
+                assessment.currentDomain < 0 ||
+                assessment.currentDomain > 5
+            ) {
+                assessment.currentDomain = 0;
+            }
+
+            currentDomainIndex = assessment.currentDomain;
+
+        } else {
+
+            initializeAssessment();
+
+        }
+
+    } catch (error) {
+
+        console.error("خطأ في قراءة البيانات:", error);
+
+        initializeAssessment();
+    }
+}
+
+
+/* =========================================================
+   إنشاء حالة التقييم
+========================================================= */
+
+function initializeAssessment() {
+
+    assessment = {
+        domains: garsDomains.map((domain, domainIndex) => {
+
+            const questions =
+                getQuestions(domain);
+
+            return {
+                domainIndex,
+                title: getDomainTitle(domain, domainIndex),
+                score: 0,
+                maxScore: questions.length * 3,
+                answers: questions.map(() => null),
+                interpretation: null,
+                recommendations: [],
+                completed: false
+            };
+
+        }),
+
+        currentDomain: 0,
+
+        lastUpdated: new Date().toISOString()
+    };
+
+    currentDomainIndex = 0;
+
+    saveAssessment();
+}
+
+
+/* =========================================================
+   الحصول على البنود
+========================================================= */
+
+function getQuestions(domain) {
+
+    if (Array.isArray(domain.questions)) {
+        return domain.questions;
+    }
+
+    if (Array.isArray(domain.items)) {
+        return domain.items;
+    }
+
+    if (Array.isArray(domain.bands)) {
+        return domain.bands;
+    }
+
+    return [];
+}
+
+
+/* =========================================================
+   اسم المجال
+========================================================= */
+
+function getDomainTitle(domain, index) {
+
+    if (domain.title) {
+        return domain.title;
+    }
+
+    if (domain.name) {
+        return domain.name;
+    }
+
+    const defaultTitles = [
+        "السلوكيات النمطية المقيدة",
+        "التفاعل الاجتماعي",
+        "التواصل الاجتماعي",
+        "الاستجابات العاطفية",
+        "النمط المعرفي",
+        "الكلام غير النمطي"
+    ];
+
+    return defaultTitles[index];
+}
+
+
+/* =========================================================
+   هدف المجال
+========================================================= */
+
+function getDomainGoal(domain) {
+
+    return (
+        domain.goal ||
+        domain.objective ||
+        domain.description ||
+        ""
+    );
+}
+
+
+/* =========================================================
+   التوصية
+========================================================= */
+
+function getRecommendation(question) {
+
+    return (
+        question.recommendation ||
+        question.recommendationText ||
+        question.advice ||
+        ""
+    );
+}
+
+
+/* =========================================================
+   نص السؤال
+========================================================= */
+
+function getQuestionText(question) {
+
+    return (
+        question.text ||
+        question.question ||
+        question.item ||
+        question.statement ||
+        ""
+    );
+}
+
+
+/* =========================================================
+   مستويات التفسير
+========================================================= */
+
+function getInterpretations(domain) {
+
+    return (
+        domain.interpretation ||
+        domain.interpretations ||
+        domain.resultInterpretation ||
+        domain.levels ||
+        []
+    );
+}
+
+
+/* =========================================================
+   البحث عن مستوى الدرجة
+========================================================= */
+
+function getInterpretation(domain, score) {
+
+    const interpretations = getInterpretations(domain);
+
+    if (!Array.isArray(interpretations)) {
+        return null;
+    }
+
+    return interpretations.find(level => {
+
+        const min =
+            Number(
+                level.min ??
+                level.from ??
+                level.start ??
+                0
+            );
+
+        const max =
+            Number(
+                level.max ??
+                level.to ??
+                level.end ??
+                999
+            );
+
+        return score >= min && score <= max;
+
+    }) || null;
+}
+
+
+/* =========================================================
+   حفظ البيانات
+========================================================= */
+
+function saveAssessment() {
+
+    assessment.lastUpdated = new Date().toISOString();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(assessment)
+    );
+}
+
+
+/* =========================================================
+   حساب المجال
+========================================================= */
+
+function calculateDomainScore(index) {
+
+    const domainState = assessment.domains[index];
+
+    if (!domainState) {
+        return 0;
+    }
+
+    const answers = domainState.answers || [];
+
+    const score = answers.reduce(
+        (total, value) => {
+
+            const number = Number(value);
+
+            if (
+                Number.isFinite(number) &&
+                number >= 0 &&
+                number <= 3
+            ) {
+                return total + number;
+            }
+
+            return total;
+
+        },
+        0
+    );
+
+    domainState.score = score;
+
+    const domain = garsDomains[index];
+
+    const interpretation =
+        getInterpretation(domain, score);
+
+    domainState.interpretation =
+        interpretation
+            ? (
+                interpretation.title ||
+                interpretation.level ||
+                interpretation.name ||
+                null
+            )
+            : null;
+
+    domainState.interpretationData =
+        interpretation || null;
+
+    domainState.recommendations =
+        interpretation
+            ? (
+                interpretation.recommendations ||
+                interpretation.recommendation ||
+                []
+            )
+            : [];
+
+    domainState.completed =
+        answers.length === 18 &&
+        answers.every(
+            value =>
+                value !== null &&
+                value !== undefined
+        );
+
+    return score;
+}
+
+
+/* =========================================================
+   شريط المجالات
+========================================================= */
+
+function renderDomainIndicator() {
+
+    const container =
+        document.getElementById("domainIndicator");
+
+    container.innerHTML = "";
+
+    garsDomains.forEach((domain, index) => {
+
+        const state =
+            assessment.domains[index];
+
+        calculateDomainScore(index);
+
+        const div =
+            document.createElement("div");
+
+        div.className = "domain-dot";
+
+        if (index === currentDomainIndex) {
+            div.classList.add("active");
+        }
+
+        if (state.completed) {
+            div.classList.add("completed");
+        }
+
+        div.innerHTML = `
+            المجال ${index + 1}
+            <br>
+            <strong>
+                ${escapeHtml(
+                    getDomainTitle(domain, index)
+                )}
+            </strong>
+        `;
+
+        div.style.cursor = "pointer";
+
+        div.onclick = () => {
+
+            currentDomainIndex = index;
+
+            assessment.currentDomain =
+                currentDomainIndex;
+
+            saveAssessment();
+
+            render();
+
+        };
+
+        container.appendChild(div);
+
+    });
+}
+
+
+/* =========================================================
+   عرض المجال
+========================================================= */
+
+function renderDomain() {
+
+    const container =
+        document.getElementById("domainContainer");
+
+    const domain =
+        garsDomains[currentDomainIndex];
+
+    const state =
+        assessment.domains[currentDomainIndex];
+
+    const questions =
+        getQuestions(domain);
+
+    const title =
+        getDomainTitle(
+            domain,
+            currentDomainIndex
+        );
+
+    const goal =
+        getDomainGoal(domain);
+
+    calculateDomainScore(currentDomainIndex);
+
+    const score =
+        state.score;
+
+    const maxScore =
+        questions.length * 3;
+
+    const percentage =
+        maxScore
+            ? Math.round(
+                (score / maxScore) * 100
+            )
+            : 0;
+
+    const interpretation =
+        getInterpretation(
+            domain,
+            score
+        );
+
+    let questionsHtml = "";
+
+    questions.forEach(
+        (question, questionIndex) => {
+
+            const savedAnswer =
+                state.answers[questionIndex];
+
+            questionsHtml += `
+
+                <div class="question-card">
+
+                    <div class="question-text">
+
+                        <span class="question-number">
+                            ${questionIndex + 1}
+                        </span>
+
+                        ${escapeHtml(
+                            getQuestionText(question)
+                        )}
+
+                    </div>
+
+                    ${
+                        getRecommendation(question)
+                            ? `
+                            <div class="recommendation">
+
+                                <strong>
+                                    التوصية:
+                                </strong>
+
+                                ${escapeHtml(
+                                    getRecommendation(question)
+                                )}
+
+                            </div>
+                            `
+                            : ""
+                    }
+
+                    <div class="score-options">
+
+                        ${createScoreOption(
+                            currentDomainIndex,
+                            questionIndex,
+                            0,
+                            "غير موجود",
+                            savedAnswer
+                        )}
+
+                        ${createScoreOption(
+                            currentDomainIndex,
+                            questionIndex,
+                            1,
+                            "بسيط",
+                            savedAnswer
+                        )}
+
+                        ${createScoreOption(
+                            currentDomainIndex,
+                            questionIndex,
+                            2,
+                            "متوسط",
+                            savedAnswer
+                        )}
+
+                        ${createScoreOption(
+                            currentDomainIndex,
+                            questionIndex,
+                            3,
+                            "شديد",
+                            savedAnswer
+                        )}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+    container.innerHTML = `
+
+        <div class="domain-card">
+
+            <h3 class="mb-3">
+
+                <span class="domain-number">
+                    ${currentDomainIndex + 1}
+                </span>
+
+                ${escapeHtml(title)}
+
+            </h3>
+
+            ${
+                goal
+                    ? `
+                    <div class="goal-box">
+
+                        <strong>
+                            هدف المجال:
+                        </strong>
+
+                        ${escapeHtml(goal)}
+
+                    </div>
+                    `
+                    : ""
+            }
+
+            <div>
+
+                ${questionsHtml}
+
+            </div>
+
+            <div class="result-box">
+
+                <div class="row text-center">
+
+                    <div class="col-md-4">
+
+                        <h6>
+                            مجموع المجال
+                        </h6>
+
+                        <h3 id="domainScore">
+                            ${score}
+                        </h3>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <h6>
+                            الحد الأقصى
+                        </h6>
+
+                        <h3>
+                            ${maxScore}
+                        </h3>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <h6>
+                            النسبة
+                        </h6>
+
+                        <h3 id="domainPercentage">
+                            ${percentage}%
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <div class="progress mt-3">
+
+                    <div
+                        id="domainProgress"
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width:${percentage}%"
+                    >
+                        ${percentage}%
+                    </div>
+
+                </div>
+
+                ${
+                    interpretation
+                        ? `
+                        <div class="interpretation-box">
+
+                            <h5>
+                                ${escapeHtml(
+                                    interpretation.title ||
+                                    interpretation.level ||
+                                    interpretation.name ||
+                                    ""
+                                )}
+                            </h5>
+
+                            <p>
+                                ${escapeHtml(
+                                    interpretation.description ||
+                                    interpretation.text ||
+                                    ""
+                                )}
+                            </p>
+
+                            ${
+                                Array.isArray(
+                                    interpretation.recommendations
+                                )
+                                ? `
+                                    <strong>
+                                        التوصيات:
+                                    </strong>
+
+                                    <ul>
+                                        ${
+                                            interpretation
+                                                .recommendations
+                                                .map(
+                                                    recommendation =>
+                                                        `<li>${escapeHtml(
+                                                            recommendation
+                                                        )}</li>`
+                                                )
+                                                .join("")
+                                        }
+                                    </ul>
+                                `
+                                : ""
+                            }
+
+                        </div>
+                        `
+                        : ""
+                }
+
+            </div>
+
+            <div class="navigation">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onclick="previousDomain()"
+                    ${currentDomainIndex === 0 ? "disabled" : ""}
+                >
+                    ← المجال السابق
+                </button>
+
+                ${
+                    currentDomainIndex < 5
+                        ? `
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="nextDomain()"
+                        >
+                            المجال التالي →
+                        </button>
+                        `
+                        : `
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            onclick="finishAssessment()"
+                        >
+                            حفظ النتيجة والانتقال للتقرير
+                        </button>
+                        `
+                }
+
+            </div>
+
+        </div>
+
+    `;
+
+    renderDomainIndicator();
+}
+
+
+/* =========================================================
+   إنشاء اختيار الدرجة
+========================================================= */
+
+function createScoreOption(
+    domainIndex,
+    questionIndex,
+    score,
+    label,
+    savedAnswer
+) {
+
+    const id =
+        `score_${domainIndex}_${questionIndex}_${score}`;
+
+    const checked =
+        Number(savedAnswer) === score
+            ? "checked"
+            : "";
+
+    const descriptions = {
+
+        0: "غير موجود",
+
+        1: "بسيط",
+
+        2: "متوسط",
+
+        3: "شديد"
+
+    };
+
+    return `
+
+        <div class="score-option">
+
+            <input
+                type="radio"
+                name="question_${questionIndex}"
+                id="${id}"
+                value="${score}"
+                ${checked}
+                onchange="
+                    setAnswer(
+                        ${domainIndex},
+                        ${questionIndex},
+                        ${score}
+                    )
+                "
+            >
+
+            <label for="${id}">
+
+                <strong>
+                    ${score}
+                </strong>
+
+                <span class="score-label">
+                    ${descriptions[score]}
+                </span>
+
+            </label>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================================
+   تسجيل الإجابة
+========================================================= */
+
+function setAnswer(
+    domainIndex,
+    questionIndex,
+    score
+) {
+
+    assessment.domains[domainIndex]
+        .answers[questionIndex] =
+        Number(score);
+
+    calculateDomainScore(domainIndex);
+
+    assessment.currentDomain =
+        currentDomainIndex;
+
+    saveAssessment();
+
+    updateResultWithoutReload();
+}
+
+
+/* =========================================================
+   تحديث النتيجة
+========================================================= */
+
+function updateResultWithoutReload() {
+
+    const state =
+        assessment.domains[currentDomainIndex];
+
+    const domain =
+        garsDomains[currentDomainIndex];
+
+    const questions =
+        getQuestions(domain);
+
+    const score =
+        calculateDomainScore(
+            currentDomainIndex
+        );
+
+    const maxScore =
+        questions.length * 3;
+
+    const percentage =
+        maxScore
+            ? Math.round(
+                (score / maxScore) * 100
+            )
+            : 0;
+
+    const scoreElement =
+        document.getElementById(
+            "domainScore"
+        );
+
+    const percentageElement =
+        document.getElementById(
+            "domainPercentage"
+        );
+
+    const progressElement =
+        document.getElementById(
+            "domainProgress"
+        );
+
+    if (scoreElement) {
+        scoreElement.textContent =
+            score;
+    }
+
+    if (percentageElement) {
+        percentageElement.textContent =
+            percentage + "%";
+    }
+
+    if (progressElement) {
+
+        progressElement.style.width =
+            percentage + "%";
+
+        progressElement.textContent =
+            percentage + "%";
+
+    }
+
+    renderDomainIndicator();
+}
+
+
+/* =========================================================
+   المجال التالي
+========================================================= */
+
+function nextDomain() {
+
+    const state =
+        assessment.domains[currentDomainIndex];
+
+    calculateDomainScore(
+        currentDomainIndex
+    );
+
+    saveAssessment();
+
+    if (
+        currentDomainIndex <
+        garsDomains.length - 1
+    ) {
+
+        currentDomainIndex++;
+
+        assessment.currentDomain =
+            currentDomainIndex;
+
+        saveAssessment();
+
+        render();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   المجال السابق
+========================================================= */
+
+function previousDomain() {
+
+    calculateDomainScore(
+        currentDomainIndex
+    );
+
+    saveAssessment();
+
+    if (currentDomainIndex > 0) {
+
+        currentDomainIndex--;
+
+        assessment.currentDomain =
+            currentDomainIndex;
+
+        saveAssessment();
+
+        render();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+}
+
+
+/* =========================================================
+   إنهاء التقييم
+========================================================= */
+
+function finishAssessment() {
+
+    calculateDomainScore(
+        currentDomainIndex
+    );
+
+    let incompleteDomains = [];
+
+    assessment.domains.forEach(
+        (state, index) => {
+
+            calculateDomainScore(index);
+
+            const incomplete =
+                !state.answers ||
+                state.answers.length !== 18 ||
+                state.answers.some(
+                    answer =>
+                        answer === null ||
+                        answer === undefined
+                );
+
+            if (incomplete) {
+
+                incompleteDomains.push(
+                    index + 1
+                );
+
+            }
+
+        }
+    );
+
+    if (incompleteDomains.length > 0) {
+
+        const confirmed =
+            confirm(
+                "يوجد مجالات لم يتم استكمال جميع بنودها:\n\n" +
+                "المجالات: " +
+                incompleteDomains.join(", ") +
+                "\n\n" +
+                "هل تريد الانتقال إلى التقرير رغم ذلك؟"
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+    }
+
+    buildFinalReportData();
+
+    saveAssessment();
+
+    window.location.href =
+        "gars-report.html";
+
+}
+
+
+/* =========================================================
+   تجهيز بيانات التقرير
+========================================================= */
+
+function buildFinalReportData() {
+
+    const finalData = {
+
+        assessmentType:
+            "GARS-3",
+
+        assessmentDate:
+            new Date().toISOString(),
+
+        totalDomains:
+            garsDomains.length,
+
+        maxTotalScore:
+            garsDomains.length * 54,
+
+        totalScore:
+            0,
+
+        domains: []
+
+    };
+
+    garsDomains.forEach(
+        (domain, index) => {
+
+            const state =
+                assessment.domains[index];
+
+            const questions =
+                getQuestions(domain);
+
+            const score =
+                calculateDomainScore(index);
+
+            const interpretation =
+                getInterpretation(
+                    domain,
+                    score
+                );
+
+            finalData.totalScore += score;
+
+            finalData.domains.push({
+
+                index:
+                    index + 1,
+
+                title:
+                    getDomainTitle(
+                        domain,
+                        index
+                    ),
+
+                goal:
+                    getDomainGoal(domain),
+
+                questionCount:
+                    questions.length,
+
+                maxScore:
+                    questions.length * 3,
+
+                score:
+                    score,
+
+                percentage:
+                    questions.length
+                        ? Math.round(
+                            (
+                                score /
+                                (questions.length * 3)
+                            ) * 100
+                        )
+                        : 0,
+
+                interpretation:
+                    interpretation || null,
+
+                interpretationTitle:
+                    interpretation
+                        ? (
+                            interpretation.title ||
+                            interpretation.level ||
+                            interpretation.name ||
+                            ""
+                        )
+                        : "",
+
+                interpretationDescription:
+                    interpretation
+                        ? (
+                            interpretation.description ||
+                            interpretation.text ||
+                            ""
+                        )
+                        : "",
+
+                recommendations:
+                    interpretation
+                        ? (
+                            interpretation.recommendations ||
+                            []
+                        )
+                        : [],
+
+                answers:
+                    [...state.answers],
+
+                questions:
+                    questions.map(
+                        (question, questionIndex) => ({
+
+                            number:
+                                questionIndex + 1,
+
+                            text:
+                                getQuestionText(
+                                    question
+                                ),
+
+                            recommendation:
+                                getRecommendation(
+                                    question
+                                ),
+
+                            score:
+                                state.answers[
+                                    questionIndex
+                                ]
+
+                        })
+                    )
+
+            });
+
+        }
+    );
+
+    finalData.completedAt =
+        new Date().toISOString();
+
+    assessment.reportData =
+        finalData;
+
+    localStorage.setItem(
+        "garsReportData",
+        JSON.stringify(finalData)
+    );
+
+}
+
+
+/* =========================================================
+   عرض الصفحة
+========================================================= */
+
+function render() {
+
+    renderDomain();
+
+}
+
+
+/* =========================================================
+   حماية النصوص من HTML
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (value === null ||
+        value === undefined) {
+
+        return "";
+
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================================
+   بدء البرنامج
+========================================================= */
+
+loadAssessment();
+
+render();
+
+</script>
+
+</body>
+</html>
+```

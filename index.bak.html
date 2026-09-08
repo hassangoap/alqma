@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>نظام تقييم اضطراب طيف التوحد</title>
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+font-family:Tahoma,Arial;
+background:#f3f6fb;
+color:#1f2937;
+
+}
+
+
+.header{
+
+background:linear-gradient(135deg,#2563eb,#1e40af);
+color:white;
+padding:30px;
+
+}
+
+
+.header h1{
+
+text-align:left;
+
+}
+
+
+.header p{
+
+text-align:left;
+margin-top:10px;
+
+}
+
+
+
+
+.container{
+
+max-width:1000px;
+margin:30px auto;
+padding:15px;
+
+}
+
+
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:25px;
+box-shadow:0 5px 20px #0002;
+
+}
+
+
+
+h2{
+
+color:#2563eb;
+margin-bottom:20px;
+
+}
+
+
+
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+
+}
+
+
+
+.group{
+
+display:flex;
+flex-direction:column;
+gap:8px;
+
+}
+
+
+
+input,
+select,
+textarea{
+
+padding:12px;
+border-radius:10px;
+border:1px solid #cbd5e1;
+font-family:inherit;
+
+}
+
+
+
+textarea{
+
+height:100px;
+
+}
+
+
+
+
+.age-box{
+
+background:#eff6ff;
+padding:12px;
+border-radius:10px;
+color:#2563eb;
+
+}
+
+
+
+
+.scales{
+
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+
+}
+
+
+
+.scale{
+
+border:2px solid #ddd;
+border-radius:15px;
+padding:25px;
+text-align:center;
+cursor:pointer;
+transition:.3s;
+
+}
+
+
+
+.scale:hover{
+
+transform:translateY(-5px);
+
+}
+
+
+
+.scale.active{
+
+border-color:#2563eb;
+background:#eff6ff;
+
+}
+
+
+
+.scale h3{
+
+color:#2563eb;
+
+}
+
+
+.logo {
+  width: 130px;
+  height: 130px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--main);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 900;
+  top: 100px;
+  left: 100px;
+}
+button{
+
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+background:#2563eb;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+
+}
+
+
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 86px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 28px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+
+@media(max-width:700px){
+
+.grid,
+.scales{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+
+
+</style>
+
+</head>
+
+
+
+<body>
+<header class="topbar">
+    <img class="logo" src="assets/logo.png" alt="شعار المركز">
+    <div class="brand-text">
+      <h1>🧠 نظام تقييم اضطراب طيف التوحد </h1>
+      <p> CARS-2 & GARS-3 Assessment System </p>
+      <p>  مركز القمة للتدريب والتأهيل 01555323662 ش حسن رضوان اعلا صيدلية الولاء </p>
+    </div>
+  </header>
+
+<div class="container">
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+بيانات الطفل
+</h2>
+
+
+<div class="grid">
+
+
+
+<div class="group">
+
+<label>
+اسم الطفل
+</label>
+
+<input 
+id="childName"
+placeholder="اسم الطفل">
+
+
+</div>
+
+
+
+
+<div class="group">
+
+<label>
+النوع
+</label>
+
+
+<select id="gender">
+
+<option value="">
+اختر
+</option>
+
+<option>
+ذكر
+</option>
+
+<option>
+أنثى
+</option>
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="group">
+
+<label>
+تاريخ الميلاد
+</label>
+
+
+<input
+type="date"
+id="birthDate"
+onchange="calculateAge()">
+
+
+</div>
+
+
+
+
+<div class="group">
+
+<label>
+العمر
+</label>
+
+
+<div 
+id="ageDisplay"
+class="age-box">
+
+سيتم الحساب تلقائياً
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="group">
+
+<label>
+رقم الملف
+</label>
+
+
+<input 
+id="fileNumber"
+placeholder="رقم الملف">
+
+
+</div>
+
+
+
+
+
+<div class="group">
+
+<label>
+تاريخ التقييم
+</label>
+
+
+<input
+type="date"
+id="evaluationDate">
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+بيانات الأخصائي
+</h2>
+
+
+
+<div class="grid">
+
+
+
+<div class="group">
+
+
+<label>
+اسم الأخصائي
+</label>
+
+
+<input
+id="specialistName"
+placeholder="اسم الأخصائي">
+
+
+</div>
+
+
+
+
+
+<div class="group">
+
+
+<label>
+التخصص
+</label>
+
+
+<select id="specialization">
+
+
+<option>
+اختر التخصص
+</option>
+
+<option>
+تخاطب
+</option>
+
+<option>
+تعديل سلوك
+</option>
+
+<option>
+تربية خاصة
+</option>
+
+<option>
+علاج وظيفي
+</option>
+
+<option>
+نفسي
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div class="group"
+style="grid-column:1/-1">
+
+
+<label>
+ملاحظات أولية
+</label>
+
+
+<textarea
+id="initialNotes"></textarea>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+اختيار المقياس
+</h2>
+
+
+
+<div class="scales">
+
+
+
+<div 
+class="scale"
+onclick="selectScale(this,'CARS-2')">
+
+
+<h3>
+CARS-2
+</h3>
+
+
+<p>
+Childhood Autism Rating Scale
+</p>
+
+
+</div>
+
+
+
+
+
+<div 
+class="scale"
+onclick="selectScale(this,'GARS-3')">
+
+
+<h3>
+GARS-3
+</h3>
+
+
+<p>
+Gilliam Autism Rating Scale
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<button onclick="startAssessment()">
+
+بدء التقييم
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+
+
+let selectedScale="";
+
+
+
+
+
+
+function calculateAge(){
+
+
+let birth =
+birthDate.value;
+
+
+if(!birth)
+return;
+
+
+
+let b =
+new Date(birth);
+
+
+let t =
+new Date();
+
+
+
+let age =
+t.getFullYear()
+-
+b.getFullYear();
+
+
+
+let m =
+t.getMonth()
+-
+b.getMonth();
+
+
+
+if(
+m<0 ||
+(
+m===0 &&
+t.getDate()<b.getDate()
+)
+
+){
+
+age--;
+
+}
+
+
+
+ageDisplay.textContent =
+age+" سنة";
+
+
+}
+
+
+
+
+
+
+
+
+function selectScale(el,scale){
+
+
+document
+.querySelectorAll(".scale")
+.forEach(x=>{
+
+x.classList.remove("active");
+
+});
+
+
+
+el.classList.add("active");
+
+
+selectedScale=scale;
+
+
+}
+
+
+
+
+
+
+
+
+function startAssessment(){
+
+
+
+if(!childName.value){
+
+alert("أدخل اسم الطفل");
+return;
+
+}
+
+
+
+if(!specialistName.value){
+
+alert("أدخل اسم الأخصائي");
+return;
+
+}
+
+
+
+if(!selectedScale){
+
+alert("اختر المقياس");
+return;
+
+}
+
+
+
+
+
+let data={
+
+
+childName:
+childName.value,
+
+
+gender:
+gender.value,
+
+
+birthDate:
+birthDate.value,
+
+
+age:
+ageDisplay.textContent,
+
+
+fileNumber:
+fileNumber.value,
+
+
+evaluationDate:
+evaluationDate.value,
+
+
+specialistName:
+specialistName.value,
+
+
+specialization:
+specialization.value,
+
+
+initialNotes:
+initialNotes.value,
+
+
+scale:
+selectedScale
+
+
+};
+
+
+
+
+
+
+localStorage.setItem(
+
+"assessmentData",
+
+JSON.stringify(data)
+
+);
+
+
+
+
+
+
+if(selectedScale==="CARS-2"){
+
+
+location.href="cars.html";
+
+
+}
+
+
+
+if(selectedScale==="GARS-3"){
+
+
+location.href="gars.html";
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+window.onload=function(){
+
+
+let d=new Date();
+
+
+evaluationDate.value =
+d.toISOString().split("T")[0];
+
+
+};
+
+
+
+</script>
+
+
+</body>
+
+</html>

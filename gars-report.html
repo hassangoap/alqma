@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير تقييم GARS-3</title>
+<style>
+@page { size:A4; margin:0; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:"Tahoma","Arial",sans-serif;background:#e9ecef;color:#17202a}
+body{direction:rtl}
+.toolbar{
+  position:sticky;top:0;z-index:1000;background:#17202a;color:#fff;
+  padding:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap
+}
+button{
+  border:0;border-radius:7px;padding:9px 15px;cursor:pointer;font-weight:bold
+}
+.btn{background:#fff;color:#17202a}
+.btn-primary{background:#f39c12;color:#fff}
+.report-page{
+  width:210mm;min-height:297mm;margin:12px auto;background:#fff;
+  position:relative;overflow:hidden;page-break-after:always;
+  box-shadow:0 3px 14px rgba(0,0,0,.18)
+}
+.report-page::before{
+  content:"";position:absolute;inset:0;
+  background:url("assets/center-background.jpg") center center/cover no-repeat;
+  opacity:.075;z-index:0;pointer-events:none
+}
+.report-content{position:relative;z-index:1;padding:13mm}
+.header{
+  display:flex;align-items:center;gap:14px;border-bottom:2px solid #17202a;
+  padding-bottom:9px;margin-bottom:13px
+}
+.logo{width:72px;height:72px;object-fit:contain}
+.center-name{font-size:20px;font-weight:800}
+.center-sub{font-size:12px;color:#555;margin-top:4px}
+h1{font-size:23px;margin:5px 0;text-align:center}
+h2{font-size:18px;margin:13px 0 8px;border-right:5px solid #f39c12;padding-right:8px}
+h3{font-size:15px;margin:10px 0 5px}
+.meta{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:10px 0 15px
+}
+.meta div{border:1px solid #d8dee3;border-radius:6px;padding:7px;background:rgba(255,255,255,.88)}
+.label{font-size:11px;color:#666}.value{font-weight:bold;margin-top:2px}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.card{
+  border:1px solid #d7dce1;border-radius:8px;padding:9px;background:rgba(255,255,255,.9)
+}
+.domain-title{font-weight:800;font-size:14px}.score{font-size:22px;font-weight:800;margin:5px 0}
+.level{font-weight:bold}
+.bar{height:10px;background:#e9ecef;border-radius:10px;overflow:hidden}
+.bar span{display:block;height:100%;background:#f39c12}
+.small{font-size:11px;color:#555}
+table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:7px}
+th,td{border:1px solid #cfd5da;padding:5px;vertical-align:top}
+th{background:#f3f4f5}
+.text-box{
+  border:1px solid #d8dee3;border-radius:7px;padding:9px;
+  background:rgba(255,255,255,.9);line-height:1.75;font-size:12px
+}
+ul{margin:5px 0;padding-right:20px;line-height:1.8;font-size:12px}
+.plan-table td:first-child{width:17%;font-weight:bold}
+.footer{position:absolute;bottom:7mm;right:13mm;left:13mm;border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#666;display:flex;justify-content:space-between}
+.chart-wrap{height:95mm;border:1px solid #ddd;border-radius:8px;padding:8px;background:rgba(255,255,255,.92)}
+canvas{width:100%;height:100%}
+.note{font-size:10px;color:#555;line-height:1.7}
+@media print{
+  body{background:#fff}
+  .toolbar{display:none}
+  .report-page{margin:0;box-shadow:none}
+}
+@media(max-width:900px){
+ .report-page{width:100%;min-height:auto;margin:0}
+ .report-content{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">طباعة / حفظ PDF</button>
+  <button class="btn-primary" onclick="exportWord()">تصدير Word</button>
+  <button class="btn" onclick="loadReport()">تحديث التقرير</button>
+</div>
+
+<div id="report"></div>
+
+<script>
+const DOMAIN_FALLBACKS = [
+ "السلوكيات النمطية المقيدة","التفاعل الاجتماعي","التواصل الاجتماعي",
+ "الاستجابات العاطفية","النمط المعرفي","الكلام غير النمطي"
+];
+
+const LEVELS = [
+ {min:0,max:13,name:"مؤشرات بسيطة"},
+ {min:14,max:27,name:"مؤشرات متوسطة"},
+ {min:28,max:40,name:"مؤشرات مرتفعة"},
+ {min:41,max:54,name:"مؤشرات شديدة"}
+];
+
+function getStored(){
+  const keys=["garsReportData","garsResults","garsData","garsEvaluation","garsAnswers"];
+  for(const k of keys){
+    try{
+      const raw=localStorage.getItem(k);
+      if(raw){ const x=JSON.parse(raw); if(x) return x; }
+    }catch(e){}
+  }
+  return null;
+}
+function arr(v){return Array.isArray(v)?v:[]}
+function first(o, keys, fallback=""){
+  if(!o || typeof o!=="object") return fallback;
+  for(const k of keys) if(o[k]!==undefined && o[k]!==null && o[k]!=="") return o[k];
+  return fallback;
+}
+function getDomains(data){
+  let d=first(data,["domains","garsDomains","results","domainResults"],null);
+  if(Array.isArray(d)) return d;
+  if(data && data.scores && Array.isArray(data.scores)) return data.scores;
+  return [];
+}
+function getScore(domain, index, data){
+  const s=first(domain,["score","total","rawScore","sum"],null);
+  if(typeof s==="number") return Math.max(0,Math.min(54,s));
+  const answers=first(domain,["answers","responses","items"],null);
+  if(Array.isArray(answers)) return answers.reduce((a,v)=>a+(Number(first(v,["score","value","rating"],v))||0),0);
+  const answers2=data && first(data,["answers","responses"],null);
+  if(answers2 && !Array.isArray(answers2) && answers2[index]) {
+    return Object.values(answers2[index]).reduce((a,v)=>a+(Number(v)||0),0);
+  }
+  return 0;
+}
+function levelFor(score){
+  return LEVELS.find(x=>score>=x.min && score<=x.max) || LEVELS[0];
+}
+function getItems(domain){
+  return first(domain,["items","questions","garsQuestions","questionsList"],[]);
+}
+function getRecommendations(domain){
+  return first(domain,["recommendations","recs","generalRecommendations"],[]);
+}
+function getInterpretation(domain){
+  return first(domain,["interpretation","reportText","description"],"تُفسر النتيجة مع بقية مجالات التقييم والمعلومات النمائية والسلوكية والتقييم السريري الشامل، ولا تُستخدم منفردة للتشخيص.");
+}
+function esc(s){
+  return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+function li(items){
+  if(!Array.isArray(items)) return "";
+  return "<ul>"+items.map(x=>"<li>"+esc(typeof x==="string"?x:first(x,["text","recommendation","title"],""))+"</li>").join("")+"</ul>";
+}
+function makePlan(names,scores,domains){
+  const plan=[];
+  const ordered=scores.map((s,i)=>({i,s})).sort((a,b)=>b.s-a.s);
+  ordered.forEach(({i,s})=>{
+    const d=domains[i]||{};
+    const rec=getRecommendations(d);
+    plan.push({
+      domain:names[i],
+      priority:s>=41?"عالية جدًا":s>=28?"عالية":s>=14?"متوسطة":"مساندة",
+      goal:"تنمية المهارات المرتبطة بمجال "+names[i]+" وتقليل أثر الصعوبات على الأداء اليومي.",
+      strategies:Array.isArray(rec)?rec.slice(0,5):[]
+    });
+  });
+  return plan;
+}
+function chart(names,scores){
+  const c=document.getElementById("garsChart"); if(!c) return;
+  const ctx=c.getContext("2d");
+  const w=c.width=c.clientWidth*2,h=c.height=c.clientHeight*2;
+  ctx.scale(2,2);
+  const W=c.clientWidth,H=c.clientHeight;
+  ctx.clearRect(0,0,W,H);
+  const pad={l:45,r:15,t:15,b:45}, cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  ctx.strokeStyle="#bbb";ctx.lineWidth=1;
+  for(let y=0;y<=54;y+=9){
+    const yy=pad.t+ch-(y/54)*ch;
+    ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(W-pad.r,yy);ctx.stroke();
+    ctx.fillStyle="#555";ctx.font="10px Tahoma";ctx.fillText(y,pad.l-28,yy+3);
+  }
+  const bw=cw/(names.length*1.5);
+  names.forEach((n,i)=>{
+    const x=pad.l+i*(cw/names.length)+((cw/names.length)-bw)/2;
+    const bh=(scores[i]/54)*ch, y=pad.t+ch-bh;
+    ctx.fillStyle="#f39c12";ctx.fillRect(x,y,bw,bh);
+    ctx.fillStyle="#17202a";ctx.font="bold 11px Tahoma";ctx.textAlign="center";
+    ctx.fillText(scores[i],x+bw/2,y-5);
+    const label=n.length>13?n.slice(0,13)+"…":n;
+    ctx.fillText(label,x+bw/2,H-22);
+  });
+  ctx.textAlign="start";
+}
+function pageHeader(){
+ return `<div class="header">
+   <img class="logo" src="assets/center-background.jpg">
+   <div><div class="center-name">مركز القمة للتدريب والتأهيل</div>
+   <div class="center-sub">تقرير تقييم GARS-3</div></div>
+ </div>`;
+}
+function pageFooter(i,total){return `<div class="footer"><span>تقرير تقييم GARS-3</span><span>صفحة ${i} من ${total}</span></div>`}
+
+function loadReport(){
+ const data=getStored()||{};
+ const domains=getDomains(data);
+ const names=domains.map((d,i)=>first(d,["name","title","domainName"],DOMAIN_FALLBACKS[i]));
+ while(names.length<6) names.push(DOMAIN_FALLBACKS[names.length]);
+ const scores=names.map((_,i)=>getScore(domains[i]||{},i,data));
+ const total=scores.reduce((a,b)=>a+b,0);
+ const child=first(data,["child","childData","patient","student"],{});
+ const childName=first(child,["name","childName","fullName"],first(data,["childName","name"],"غير محدد"));
+ const age=first(child,["age","childAge"],first(data,["age","childAge"],""));
+ const date=first(data,["date","evaluationDate","assessmentDate"],new Date().toLocaleDateString("ar-EG"));
+ const examiner=first(data,["examiner","evaluator","specialist"],"");
+ const plan=makePlan(names,scores,domains);
+
+ let pages=[];
+ pages.push(`<section class="report-page"><div class="report-content">${pageHeader()}
+ <h1>تقرير تقييم GARS-3</h1>
+ <div class="meta">
+  <div><span class="label">اسم الطفل</span><div class="value">${esc(childName)}</div></div>
+  <div><span class="label">العمر</span><div class="value">${esc(age)}</div></div>
+  <div><span class="label">تاريخ التقييم</span><div class="value">${esc(date)}</div></div>
+  <div><span class="label">المقيّم</span><div class="value">${esc(examiner)}</div></div>
+ </div>
+ <h2>الملخص العام</h2>
+ <div class="summary-grid">${names.map((n,i)=>{let l=levelFor(scores[i]);return `<div class="card">
+ <div class="domain-title">${esc(n)}</div><div class="score">${scores[i]} / 54</div>
+ <div class="bar"><span style="width:${(scores[i]/54)*100}%"></span></div>
+ <div class="level">${l.name}</div></div>`}).join("")}</div>
+ <div class="card" style="margin-top:10px"><b>إجمالي المجالات:</b> ${total} / 324</div>
+ <p class="note">ملاحظة: هذا التقرير تنظيمي/تفسيري لنتائج المجالات وفق بنية البرنامج، ولا تُستخدم نتيجة مجال منفردة لتشخيص اضطراب طيف التوحد.</p>
+ ${pageFooter(1,3)}</div></section>`);
+
+ pages.push(`<section class="report-page"><div class="report-content">${pageHeader()}
+ <h2>الرسم البياني لدرجات المجالات</h2>
+ <div class="chart-wrap"><canvas id="garsChart"></canvas></div>
+ <h2>الخطة العلاجية المقترحة</h2>
+ <table class="plan-table"><thead><tr><th>المجال</th><th>الأولوية</th><th>الهدف العام</th><th>استراتيجيات مقترحة</th></tr></thead><tbody>
+ ${plan.map(p=>`<tr><td>${esc(p.domain)}</td><td>${esc(p.priority)}</td><td>${esc(p.goal)}</td><td>${li(p.strategies)}</td></tr>`).join("")}
+ </tbody></table>
+ <p class="note">تُراجع الخطة من المختص وتُعدل وفق العمر والقدرات النمائية والأهداف الوظيفية والبيانات السلوكية الفعلية.</p>
+ ${pageFooter(2,3)}</div></section>`);
+
+ let detail = `<section class="report-page"><div class="report-content">${pageHeader()}<h2>تفاصيل المجالات والتوصيات</h2>`;
+ names.forEach((n,i)=>{
+   const d=domains[i]||{}, l=levelFor(scores[i]);
+   const items=getItems(d), rec=getRecommendations(d);
+   detail += `<div class="card" style="margin-bottom:9px">
+    <div class="domain-title">${esc(n)} — ${scores[i]} / 54 — ${l.name}</div>
+    <p class="small"><b>الهدف:</b> ${esc(first(d,["goal","objective","purpose"],"تقييم المهارات والصعوبات المرتبطة بهذا المجال."))}</p>
+    <div class="text-box"><b>التفسير:</b> ${esc(typeof getInterpretation(d)==="string"?getInterpretation(d):"")}</div>
+    ${Array.isArray(rec)&&rec.length?`<h3>التوصيات</h3>${li(rec)}`:""}
+    ${Array.isArray(items)&&items.length?`<h3>ملخص البنود</h3><table><thead><tr><th>البند</th><th>الدرجة</th><th>النص</th><th>التوصية</th></tr></thead><tbody>${
+      items.map((it,j)=>{
+        const q=typeof it==="string"?it:first(it,["text","question","item"],"");
+        const r=typeof it==="object"?first(it,["recommendation","rec","advice"],""):"";
+        const sc=typeof it==="object"?first(it,["score","value","rating"],""):"";
+        return `<tr><td>${j+1}</td><td>${esc(sc)}</td><td>${esc(q)}</td><td>${esc(r)}</td></tr>`;
+      }).join("")
+    }</tbody></table>`:""}
+   </div>`;
+ });
+ detail += `<p class="note">صياغة التقرير: تُفسر النتائج في ضوء العمر والقدرات النمائية واللغوية والتعليمية وبقية مجالات التقييم والتقييم السريري الشامل.</p>
+ ${pageFooter(3,3)}</div></section>`;
+ pages.push(detail);
+ document.getElementById("report").innerHTML=pages.join("");
+ chart(names,scores);
+}
+function exportWord(){
+ const content=document.getElementById("report").innerHTML;
+ const html=`<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="UTF-8"><style>
+ body{font-family:Tahoma,Arial;direction:rtl} table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:5px} h1,h2{text-align:center}
+ .report-page{page-break-after:always;min-height:270mm;position:relative} .report-page:before{content:"";position:absolute;inset:0;background:url('assets/center-background.jpg') center/cover no-repeat;opacity:.08}
+ .report-content{position:relative}
+ </style></head><body>${content}</body></html>`;
+ const blob=new Blob(["\ufeff",html],{type:"application/msword"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="GARS-3-Report.doc";a.click();
+ setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+document.addEventListener("DOMContentLoaded",loadReport);
+</script>
+</body>
+</html>
