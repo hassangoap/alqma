@@ -1,41 +1,279 @@
+<!-- تحديد نوع المستند كـ HTML5 -->
 <!DOCTYPE html>
+<!-- تحديد اللغة العربية واتجاه النص من اليمين إلى اليسار -->
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>نظام CARS-2 & GARS-3</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial;background:#f3f6fb;color:#1f2937}.top{background:linear-gradient(135deg,#2563eb,#1e40af);color:#fff;padding:22px}.top-inner{max-width:1100px;margin:auto;display:flex;align-items:center;gap:18px}.logo{width:82px;height:82px;object-fit:contain;background:#fff;border-radius:12px;padding:5px}.container{max-width:1100px;margin:25px auto;padding:12px}.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 5px 20px #0001}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.group{display:flex;flex-direction:column;gap:7px}input,select,textarea{padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}textarea{min-height:90px}.age{background:#eff6ff;color:#1d4ed8;padding:12px;border-radius:10px}.scales{display:grid;grid-template-columns:1fr 1fr;gap:15px}.scale{border:2px solid #dbe2ea;border-radius:14px;padding:20px;text-align:center;cursor:pointer}.scale.active{border-color:#2563eb;background:#eff6ff}.scale h3{color:#2563eb}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}button{border:0;border-radius:10px;padding:14px;font-weight:bold;font-size:16px;cursor:pointer;background:#2563eb;color:#fff}button.secondary{background:#0f766e}button.gray{background:#475569}.hint{font-size:13px;color:#64748b;line-height:1.8}.status{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:none}.status.show{display:block}@media(max-width:750px){.grid,.scales,.actions{grid-template-columns:1fr}.top-inner{flex-direction:column;text-align:center}}
-</style></head>
+    <!-- تحديد ترميز الأحرف بدعم اللغة العربية -->
+    <meta charset="UTF-8">
+    <!-- ضبط أبعاد الشاشة لتوافق الأجهزة المحمولة -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- عنوان الصفحة المكتوب في لسان المتصفح -->
+    <title>نظام تقييم التكامل الحسي الشامل - مركز القمة للتدريب</title>
+
+    <!-- استدعاء مكتبة Chart.js لإنشاء الرسوم البيانية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- ربط ملف التنسيقات الخارجية CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+</head>
 <body>
-<header class="top"><div class="top-inner"><img class="logo" src="logo.png"><div><h1>نظام تقييم اضطراب طيف التوحد</h1><div>CARS-2 & GARS-3 Assessment System</div><div>مركز القمة للتدريب والتأهيل</div></div></div></header>
-<main class="container">
-<section class="card"><h2>بيانات الطفل</h2><div class="grid">
-<div class="group"><label>اسم الطفل *</label><input id="childName"></div>
-<div class="group"><label>النوع</label><select id="gender"><option value="">اختر</option><option>ذكر</option><option>أنثى</option></select></div>
-<div class="group"><label>تاريخ الميلاد</label><input type="date" id="birthDate"></div>
-<div class="group"><label>العمر</label><div id="ageDisplay" class="age">سيتم الحساب تلقائيًا</div></div>
-<div class="group"><label>رقم الملف</label><input id="fileNumber"></div>
-<div class="group"><label>تاريخ التقييم</label><input type="date" id="evaluationDate"></div>
-</div></section>
-<section class="card"><h2>بيانات الأخصائي</h2><div class="grid">
-<div class="group"><label>اسم الأخصائي *</label><input id="specialistName"></div>
-<div class="group"><label>التخصص</label><select id="specialization"><option>اختر التخصص</option><option>تخاطب</option><option>تعديل سلوك</option><option>تربية خاصة</option><option>علاج وظيفي</option><option>نفسي</option></select></div>
-<div class="group"><label>ملاحظات أولية</label><textarea id="initialNotes"></textarea></div>
-</div></section>
-<section class="card"><h2>اختر التقييم</h2><div class="scales">
-<div class="scale" id="carsScale" onclick="selectScale('CARS-2')"><h3>CARS-2</h3><p>تقييم السلوكيات والخصائص المرتبطة بالتوحد.</p></div>
-<div class="scale" id="garsScale" onclick="selectScale('GARS-3')"><h3>GARS-3</h3><p>6 مجالات / 108 بندًا.</p></div>
-</div></section>
-<section class="card"><div class="actions"><button onclick="startAssessment()">بدء / استكمال التقييم</button><button class="secondary" onclick="openCombined()">التقرير الموحد</button></div><p class="hint">يمكنك إكمال CARS-2 وGARS-3 في أي ترتيب. بيانات الطفل محفوظة في <b>assessmentData</b> ويستخدمها الاختباران والتقرير الموحد.</p><div id="status" class="status"></div></section>
-</main>
-<script>
-let selectedScale="";
-const $=id=>document.getElementById(id);
-function calculateAge(){const v=$("birthDate").value;if(!v){$("ageDisplay").textContent="سيتم الحساب تلقائيًا";return ""}const b=new Date(v+"T00:00:00"),t=new Date();let y=t.getFullYear()-b.getFullYear(),m=t.getMonth()-b.getMonth();if(m<0||(m===0&&t.getDate()<b.getDate()))y--;let age=Math.max(0,y)+" سنة";$("ageDisplay").textContent=age;return age}
-$("birthDate").addEventListener("change",calculateAge);
-function selectScale(scale){selectedScale=scale;$("carsScale").classList.toggle("active",scale==="CARS-2");$("garsScale").classList.toggle("active",scale==="GARS-3")}
-function saveChild(){const data={childName:$("childName").value.trim(),gender:$("gender").value,birthDate:$("birthDate").value,age:calculateAge(),fileNumber:$("fileNumber").value.trim(),evaluationDate:$("evaluationDate").value,specialistName:$("specialistName").value.trim(),specialization:$("specialization").value,initialNotes:$("initialNotes").value,updatedAt:new Date().toISOString()};localStorage.setItem("assessmentData",JSON.stringify(data));return data}
-function startAssessment(){if(!$("childName").value.trim())return alert("أدخل اسم الطفل");if(!$("specialistName").value.trim())return alert("أدخل اسم الأخصائي");if(!selectedScale)return alert("اختر CARS-2 أو GARS-3");saveChild();location.href=selectedScale==="CARS-2"?"cars.html":"gars.html"}
-function openCombined(){saveChild();location.href="combined-report.html"}
-function load(){try{const d=JSON.parse(localStorage.getItem("assessmentData")||"null");if(d){["childName","gender","birthDate","fileNumber","evaluationDate","specialistName","specialization","initialNotes"].forEach(k=>{if($(k)&&d[k]!=null)$(k).value=d[k]});calculateAge()}$("evaluationDate").value=$("evaluationDate").value||new Date().toISOString().slice(0,10);const cr=localStorage.getItem("CARS_Result"),gr=localStorage.getItem("garsReportData");$("status").innerHTML=`CARS-2: ${cr?"محفوظ":"غير مكتمل"} &nbsp; | &nbsp; GARS-3: ${gr?"محفوظ":"غير مكتمل"}`;$("status").classList.add("show")}catch(e){console.error(e)}}window.addEventListener("load",load);
-</script></body></html>
+
+<!-- الحاوية الرئيسية للتطبيق -->
+<div class="main-container">
+    <!-- رأس الواجهة الرئيسي -->
+    <header class="app-header">
+        <div class="header-content">
+            <!-- الشعار -->
+            <div class="logo-wrapper">
+                <img class="app-logo" src="logo.png" alt="شعار مركز القمة للتدريب والتأهيل">
+            </div>
+            
+            <!-- النص والعناوين -->
+            <div class="header-text">
+                <span class="badge">مركز القمة للتدريب والتأهيل</span>
+                <h1 class="main-title">برنامج تقييم التكامل الحسي المتقدم</h1>
+                <p class="subtitle">
+                    <i class="icon-analytics"></i> نظام التقرير الموثق والتحليل البياني الذكي
+                </p>
+            </div>
+        </div>
+    </header>
+    <!-- قسم سجل الأطفال المسجلين -->
+<div class="saved-section">
+    <div class="saved-section-header">
+        <div class="icon-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                <path d="M12 11v6"></path>
+                <path d="M9 14h6"></path>
+            </svg>
+        </div>
+        <div class="saved-title-group">
+            <h3>سجل الأطفال المسجلين</h3>
+            <p>اختر ملف الطفل للتقييم، تعديل البيانات، أو استخراج التقرير</p>
+        </div>
+    </div>
+
+    <div class="saved-section-body">
+        <div class="select-wrapper">
+            <select id="savedChildrenSelect" class="styled-select">
+                <option value="">-- اختر طفلاً لعرض تقريره أو تعديله --</option>
+            </select>
+            <span class="select-arrow"></span>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="loadSelectedChild()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>تحميل البيانات</span>
+        </button>
+    </div>
+</div>
+
+    <!-- نموذج إدخال البيانات والتقييم الحسي -->
+<form id="sensoryForm" onsubmit="return false;">
+    <!-- بطاقة البيانات الأساسية للطفل -->
+    <div class="section-card">
+        <!-- عنوان قسم البيانات الشخصية -->
+        <div class="card-header">
+            <div class="header-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <h3>البيانات الأساسية للطفل</h3>
+        </div>
+
+        <!-- شبكة توزيع حقول الإدخال -->
+        <div class="form-grid">
+            <!-- حقل إدخال اسم الطفل -->
+            <div class="input-group">
+                <label for="childName">اسم الطفل <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="childName" required placeholder="أدخل الاسم الرباعي">
+                </div>
+            </div>
+
+            <!-- حقل إدخال عمر الطفل -->
+            <div class="input-group">
+                <label for="childAge">العمر (سنوات / أشهر) <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="childAge" required placeholder="مثال: 5 سنوات و 3 أشهر">
+                </div>
+            </div>
+
+            <!-- حقل اختيار جنس الطفل -->
+            <div class="input-group">
+                <label for="childGender">الجنس</label>
+                <div class="select-wrapper">
+                    <select id="childGender">
+                        <option value="ذكر">ذكر</option>
+                        <option value="أنثى">أنثى</option>
+                    </select>
+                    <span class="custom-arrow"></span>
+                </div>
+            </div>
+
+            <!-- حقل اختيار تاريخ التقييم -->
+            <div class="input-group">
+                <label for="evalDate">تاريخ التقييم <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <input type="date" id="evalDate" required>
+                </div>
+            </div>
+
+            <!-- حقل إدخال اسم الأخصائي -->
+            <div class="input-group full-width">
+                <label for="evaluator">اسم الأخصائي المتابع <span class="required">*</span></label>
+                <div class="input-wrapper">
+                    <input type="text" id="evaluator" required placeholder="أدخل اسم الأخصائي المسؤول">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+        <!-- بطاقة استمارة البنود الحسية -->
+        <div class="section-card">
+            <!-- عنوان استمارة البنود -->
+            <h3>📊 استمارة التقييم للأنظمة الحسية (8 مجالات)</h3>
+            <!-- حاوية يتم ديناميكياً بناء بنود المجالات فيها عبر JavaScript -->
+            <div id="domainsContainer"></div>
+        </div>
+
+        <!-- مجموعة أزرار التفاعل والإجراءات -->
+        <div class="btn-group">
+            <!-- زر استخراج التقرير والرسوم البيانية -->
+            <button type="button" class="btn" onclick="generateFullReport()">استخراج التقرير والتحليل البياني 📊</button>
+            <!-- زر حفظ بيانات النموذج تلقائياً -->
+            <button type="button" class="btn btn-save" onclick="saveChildData()">حفظ البيانات تلقائياً 💾</button>
+        </div>
+    </form>
+
+    <!-- صندوق التقرير النهائي القابل للطباعة -->
+    <div id="reportBox" class="report-box">
+        <!-- صفحة التقرير بتنسيق A4 -->
+        <div class="a4-page" id="reportContent">
+            <!-- ترويسة التقرير الرسمية -->
+            <div class="report-header">
+                <!-- حاوية الشعار والعنوان -->
+                <div class="logo-box">
+                    <!-- عنصر شعار المركز مع إخفاء تلقائي في حالة عدم الوجود -->
+                    <img id="reportLogoImg" src="logo.png" class="logo-img-preview" alt="شعار المركز" onerror="this.style.display='none'">
+                    <!-- عنوان وتفاصيل المركز -->
+                    <div class="center-title">
+                        <!-- اسم المركز -->
+                        <h2> مركز القمة  للتدريب والتأهيل  </h2>
+                        <!-- اسم المركز بالإنجليزية -->
+                        <p>AL-QAMMA TRAINING CENTER</p>
+                    </div>
+                </div>
+                <!-- اسم القسم الفني للتقرير -->
+                <div style="text-align: left;">
+                    <!-- نص يوضح اسم الوحدة المختصة -->
+                    <span style="font-size: 11px; color: #64748b;">وحدة العلاج الوظيفي والتكامل الحسي </span>
+                </div>
+            </div>
+
+            <!-- عنوان التقرير الرئيسي المطبوع -->
+            <h3 style="text-align: center; color: #1e293b; margin-top: 0; margin-bottom: 8px; font-size: 15px;">التقرير الشامل لتقييم التكامل الحسي (8 مجالات)</h3>
+
+            <!-- جدول ملخص بيانات الطفل -->
+            <table class="info-table">
+                <!-- الصف الأول للجدول -->
+                <tr>
+                    <!-- خلية اسم الطفل -->
+                    <td><strong>اسم الطفل:</strong> <span id="rName"></span></td>
+                    <!-- خلية عمر الطفل -->
+                    <td><strong>العمر:</strong> <span id="rAge"></span></td>
+                </tr>
+                <!-- الصف الثاني للجدول -->
+                <tr>
+                    <!-- خلية جنس الطفل -->
+                    <td><strong>الجنس:</strong> <span id="rGender"></span></td>
+                    <!-- خلية تاريخ التقييم -->
+                    <td><strong>تاريخ التقييم:</strong> <span id="rDate"></span></td>
+                </tr>
+                <!-- الصف الثالث للجدول -->
+                <tr>
+                    <!-- خلية دمج لاسم الأخصائي -->
+                    <td colspan="2"><strong>الأخصائي الفاحص:</strong> <span id="rEvaluator"></span></td>
+                </tr>
+            </table>
+
+            <!-- عنوان قسم الرسم البياني -->
+            <div class="section-title">📈 التحليل البياني بالأعمدة (فرط الاستجابة مقابل نقص الاستجابة)</div>
+            
+            <!-- حاوية لوحة الرسم البياني للشارت -->
+            <div class="chart-container">
+                <!-- عنصر كانفاس لرسم الشارت بواسطة Chart.js -->
+                <canvas id="sensoryChart"></canvas>
+            </div>
+
+            <!-- عنوان قسم استجابات نقص الحس -->
+            <div class="section-title" style="color: var(--hypo-color); border-color: var(--hypo-color);">🔵 أولاً: عناصر نقص الاستجابة / خمول وبحث حسي (Hypo-responsiveness)</div>
+            <!-- صندوق قائمة عناصر نقص الاستجابة -->
+            <div class="hypo-list">
+                <!-- قائمة غير مرتبة للبث الديناميكي بعناصر نقص الاستجابة -->
+                <ul id="hypoList" style="margin:0; padding-right:15px;"></ul>
+            </div>
+
+            <!-- عنوان قسم استجابات فرط الحس -->
+            <div class="section-title" style="color: var(--hyper-color); border-color: var(--hyper-color);">🔴 ثانياً: عناصر فرط الاستجابة / التجنب الحسي (Hyper-responsiveness)</div>
+            <!-- صندوق قائمة عناصر فرط الاستجابة -->
+            <div class="hyper-list">
+                <!-- قائمة غير مرتبة للبث الديناميكي بعناصر فرط الاستجابة -->
+                <ul id="hyperList" style="margin:0; padding-right:15px;"></ul>
+            </div>
+
+            <!-- عنوان قسم التوصيات والبرنامج -->
+            <div class="section-title">📝  الخطة العلاجية والتوصيات المخصصة تحت اشراف اخصائى تكامل حسي</div>
+            <!-- صندوق نص الخطة العلاجية الديناميكية -->
+            <div class="plan-box" id="planBox"></div>
+
+            <!-- ذيل ورقة التقرير المخصصة للتوقيعات -->
+             
+            <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+                <!-- توقيع الأخصائي -->
+                <span>توقيع الأخصائي: ...........................</span>
+                <!-- توقيع مدير المركز -->
+                <span>اعتماد مدير المركز: ....................................</span>
+            </div>
+            <div style="margin-top: 20px; display: flex; justify-content: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+                 <span> مركز القمه للتدريب والتاهيل  طنطا ش حسن رضوان اعلى صيدليه الولاء ت: 01555323662 </span>
+            </div>
+        </div>
+<!-- أضف هذا الزر في ملف HTML أسفل النموذج أو الأسئلة -->
+<div style="text-align: center; margin: 25px 0;">
+    <button type="button" id="btnGenerateReport" onclick="generateFullReport()" style="padding: 12px 25px; background-color: #0d3b66; color: #fff; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">
+        📋 توليد التقرير والخطة العلاجية بالذكاء الاصطناعي
+    </button>
+</div>
+
+<!-- مكان عرض التقرير والخطة -->
+<div id="reportBox" style="display: none; margin-top: 20px;">
+    <!-- مكان عرض الخطة العلاجية المحدثة عبر Gemini -->
+    <div id="planBox"></div>
+</div>
+        <!-- أزرار التصدير والطباعة الخارجية للتقرير -->
+        <div class="btn-group" style="margin-top: 15px; max-width: 800px; margin-left: auto; margin-right: auto;">
+            <!-- زر الطباعة وحفظ كـ PDF المباشر -->
+            <button type="button" class="btn btn-pdf" id="pdfBtn" onclick="exportToPDF()">طباعة / حفظ كـ PDF 🖨️</button>
+            <!-- زر التصدير إلى ملف Word -->
+            <button type="button" class="btn btn-word" id="wordBtn" onclick="exportToWord()">تصدير كملف Word 📝</button>
+        </div>
+    </div>
+</div>
+<!-- استدعاء ملف البنود والبيانات أولاً -->
+    <script src="items-data.js"></script>
+
+    <!-- ثم استدعاء الملف الأساسي المشتمل على باقي الدوال وGemini -->
+    <script src="main-script.js"></script>
+<!-- ربط ملف البرمجة والتفاعل السلوكي JavaScript -->
+<script src="script.js"></script>
+</body>
+</html>
+    <!-- باقي محتوى التطبيق يوضع هنا -->
+</div>
