@@ -1,251 +1,192 @@
-/* ==========================================
-   1. المتغيرات اللونية وصندوق التقرير (Report Container)
-   ========================================== */
+/* ==========================================================================
+   نظام تقييم التكامل الحسي المتقدم - مركز القمة للتدريب والتأهيل
+   ملف التنسيقات المتكامل والواجهة التفاعلية الفائقة (style.css)
+   ========================================================================== */
+
+/* 1. المتغيرات اللونية والهندسية الرئيسية */
 :root {
-    --hypo-color: #2563eb;  /* أزرق لنقص الاستجابة */
-    --hyper-color: #dc2626; /* أحمر لفرط الاستجابة */
-    --primary-color: #0d3b66;
+    --primary-color: #0d3b66;      /* الكحلي الملكي للمركز */
+    --secondary: #0284c7;          /* الأزرق السماوي الاحترافي */
+    --accent: #0ea5e9;
+    --main: #0d3b66;
+    --card-bg: #ffffff;
+    --bg-body: #f1f5f9;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #cbd5e1;
+    --border-light: #e2e8f0;
+    
+    /* ألوان التصنيف الحسي والدرجات */
+    --score-0: #10b981;            /* أخضر - طبيعي */
+    --score-0-bg: #ecfdf5;
+    --score-1: #eab308;            /* أصفر - بسيط */
+    --score-1-bg: #fefce8;
+    --score-2: #f97316;            /* برتقالي - متوسط */
+    --score-2-bg: #fff7ed;
+    --score-3: #ef4444;            /* أحمر - شديد */
+    --score-3-bg: #fef2f2;
+
+    --hyper-color: #dc2626;        /* أحمر لفرط الاستجابة والتجنب */
+    --hyper-bg: #fef2f2;
+    --hyper-border: #fecaca;
+    
+    --hypo-color: #2563eb;         /* أزرق لنقص الاستجابة والبحث الحسي */
+    --hypo-bg: #eff6ff;
+    --hypo-border: #bfdbfe;
+    
+    --success: #16a34a;            /* أخضر الحفظ والتوصيات */
+    --success-bg: #f0fdf4;
+    --success-border: #bbf7d0;
+    
+    --word-color: #2b579a;         /* أزرق مايكروسوفت وورد */
+    --warning-bg: #fffbeb;
+    --warning-border: #fde68a;
 }
 
-.report-box {
-    margin: 30px auto;
-    max-width: 900px;
-    direction: rtl;
-}
-
-/* ورقة A4 التفاعلية */
-.a4-page {
-    background: #ffffff;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 15mm 20mm;
-    margin: 0 auto;
-    border-radius: 8px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
+/* 2. التهيئة العامة ونمط الصفحة */
+* {
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #1e293b;
-}
-
-/* ==========================================
-   2. ترويسة التقرير وجدول البيانات
-   ========================================== */
-.report-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #0d3b66;
-    padding-bottom: 12px;
-    margin-bottom: 15px;
-}
-
-.logo-box {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.logo-img-preview {
-    height: 60px;
-    width: auto;
-    object-fit: contain;
-}
-
-.center-title h2 {
     margin: 0;
-    font-size: 1.25rem;
-    color: #0d3b66;
-    font-weight: 700;
+    padding: 0;
 }
 
-.center-title p {
-    margin: 2px 0 0 0;
-    font-size: 0.75rem;
-    color: #64748b;
-    letter-spacing: 0.5px;
-}
-
-/* جدول بيانات الطفل */
-.info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
-.info-table td {
-    padding: 8px 12px;
-    font-size: 0.85rem;
-    border: 1px solid #e2e8f0;
-    color: #334155;
-}
-
-.info-table td strong {
-    color: #0d3b66;
-}
-
-/* ==========================================
-   3. العناوين والأقسام وقوائم فرط/نقص الحس
-   ========================================== */
-.section-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #0d3b66;
-    margin: 14px 0 8px 0;
-    padding-bottom: 4px;
-    border-bottom: 2px solid #e2e8f0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* حاوية الشارت */
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 220px;
-    margin-bottom: 15px;
-    background-color: #ffffff;
-    border: 1px solid #f1f5f9;
-    border-radius: 8px;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-/* صناديق قوائم فرط ونقص الاستجابة */
-.hypo-list, .hyper-list {
-    background-color: #f8fafc;
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin-bottom: 12px;
-    font-size: 0.85rem;
-    line-height: 1.6;
-}
-
-.hypo-list {
-    border-right: 4px solid var(--hypo-color);
-}
-
-.hyper-list {
-    border-right: 4px solid var(--hyper-color);
-}
-
-.hypo-list ul li, .hyper-list ul li {
-    margin-bottom: 4px;
-    color: #334155;
-}
-
-/* صندوق التوصيات والخطة العلاجية */
-.plan-box {
-    background-color: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    border-right: 4px solid #166534;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    line-height: 1.6;
-    color: #14532d;
-    margin-bottom: 15px;
-}
-
-.plan-box ul {
-    margin: 4px 0;
-    padding-right: 18px;
-}
-
-/* ==========================================
-   4. أزرار التصدير وقواعد الطباعة (@media print)
-   ========================================== */
-.btn-pdf {
-    background: linear-gradient(135deg, #0d3b66 0%, #195280 100%);
-    color: #ffffff;
-}
-
-.btn-pdf:hover {
-    background: linear-gradient(135deg, #092c4d 0%, #124167 100%);
-}
-
-.btn-word {
-    background-color: #2b579a;
-    color: #ffffff;
-}
-
-.btn-word:hover {
-    background-color: #1e3d6d;
-}
-
-/* تنسيقات الطباعة المباشرة */
-@media print {
-    body {
-        background: #ffffff !important;
-        padding: 0 !important;
-    }
-
-    .main-container, .saved-section, .btn-group, #sensoryForm {
-        display: none !important;
-    }
-
-    .report-box {
-        margin: 0 !important;
-        max-width: 100% !important;
-    }
-
-    .a4-page {
-        width: 100% !important;
-        height: auto !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding: 0 !important;
-    }
-
-    .chart-container {
-        height: 200px !important;
-    }
-}
-
-
-/* خلفية عامة ونمط خطوط التطبيق */
 body {
-    background-color: #f4f7f6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
+    background-color: var(--bg-body);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, 'Cairo', sans-serif;
+    color: var(--text-main);
+    line-height: 1.6;
     direction: rtl;
-    color: #2c3e50;
+    text-align: right;
+    padding: 20px;
 }
 
-/* الحاوية الرئيسية */
+/* الحاوية الرئيسية للتطبيق */
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
-    background: #ffffff;
-    border-radius: 16px;
+    background: var(--card-bg);
+    border-radius: 18px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    padding: 30px;
-    border: 1px solid #eef2f5;
+    padding: 32px;
+    border: 1px solid var(--border-light);
 }
 
-/* رأس الواجهة الرئيسي */
-.app-header {
-    background: linear-gradient(135deg, #0d3b66 0%, #195280 100%);
-    border-radius: 12px;
-    padding: 28px 35px;
+/* 3. الشريط العلوي العائم اللاصق (Sticky Assessment Action Bar) */
+.sticky-assessment-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(13, 59, 102, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: #ffffff;
-    box-shadow: 0 8px 20px rgba(13, 59, 102, 0.15);
+    padding: 10px 24px;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    direction: rtl;
+}
+
+.sticky-assessment-bar.visible {
+    transform: translateY(0);
+}
+
+.sticky-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.sticky-info-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.9rem;
+}
+
+.sticky-badge {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sticky-badge-sub {
+    font-size: 0.85rem;
+    color: #bae6fd;
+}
+
+.sticky-badge-sub.difficulty {
+    color: #fde68a;
+    font-weight: 700;
+}
+
+.sticky-actions-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-sticky-primary {
+    background: #0284c7;
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-sticky-primary:hover {
+    background: #0369a1;
+}
+
+.btn-sticky-save {
+    background: #16a34a;
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-sticky-scroll {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+/* 4. ترويسة التطبيق والشعار */
+.app-header {
+    background: linear-gradient(135deg, #0d3b66 0%, #1a4d7c 100%);
+    border-radius: 16px;
+    padding: 26px 32px;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(13, 59, 102, 0.16);
+    margin-bottom: 24px;
     position: relative;
     overflow: hidden;
 }
 
-/* لمسة جمالية خلفية */
-.app-header::before {
+.app-header::after {
     content: '';
     position: absolute;
-    top: -50px;
-    left: -50px;
+    top: -40px;
+    left: -40px;
     width: 200px;
     height: 200px;
     background: rgba(255, 255, 255, 0.05);
@@ -253,21 +194,19 @@ body {
     pointer-events: none;
 }
 
-/* توزيع عناصر الرأس */
 .header-content {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 22px;
     position: relative;
     z-index: 1;
 }
 
-/* حاوية الشعار */
 .logo-wrapper {
     background: #ffffff;
     padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -275,246 +214,264 @@ body {
 }
 
 .app-logo {
-    height: 75px;
+    height: 76px;
     width: auto;
     object-fit: contain;
 }
 
-/* النصوص والعناوين */
 .header-text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-/* شارة المركز العليا */
 .badge {
     background-color: rgba(255, 255, 255, 0.18);
     color: #e0f2fe;
     font-size: 0.85rem;
     font-weight: 600;
-    padding: 4px 12px;
+    padding: 4px 14px;
     border-radius: 20px;
     margin-bottom: 8px;
-    letter-spacing: 0.3px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
-/* العنوان الرئيسي */
 .main-title {
-    margin: 0 0 6px 0;
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -0.2px;
+    font-size: 1.7rem;
+    font-weight: 800;
     color: #ffffff;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
 }
 
-/* الوصف الفرعي */
 .subtitle {
-    margin: 0;
     font-size: 0.95rem;
-    color: #b2d5ee;
-    font-weight: 400;
+    color: #bae6fd;
+    font-weight: 500;
 }
 
-/* تجاوب الواجهة مع الشاشات الصغيرة (الهواتف) */
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .header-text {
-        align-items: center;
-    }
-
-    .main-title {
-        font-size: 1.4rem;
-    }
-
-    .app-header {
-        padding: 20px 15px;
-    }
-}
-
-/* تنسيق الحاوية الرئيسية للتطبيق */
-.container {
-    /* تحديد أقصى عرض مسموح للحاوية */
-    max-width: 1050px;
-    /* تتسيط الحاوية في منتصف الشاشة افقياً */
-    margin: 0 auto;
-    /* تطبيق لون الخلفية الأبيض */
-    background: var(--card-bg);
-    /* حشو داخلي 30 بكسل */
-    padding: 30px;
-    /* تدوير زوايا الحاوية */
-    border-radius: 12px;
-    /* إضافة ظلال خفيفة لإعطاء عمق للمستند */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
-
-/* تنسيق ترويسة الواجهة العليا */
-.header {
-    /* محاذاة النص في المنتصف */
-    text-align: center;
-    /* إطار سفلي ملون سميك */
-    border-bottom: 3px solid var(--secondary);
-    /* مسافة داخلية من الأسفل */
-    padding-bottom: 15px;
-    /* مسافة خارجية من الأسفل */
-    margin-bottom: 25px;
-}
-
-/* ==========================================
-   1. بطاقة استمارة البنود الحسية (Section Card)
-   ========================================== */
-.section-card {
+/* 5. قسم إدارة السجلات المحفوظة */
+.saved-section {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
+    border: 1.5px solid var(--border-light);
     border-radius: 14px;
-    padding: 24px;
+    padding: 20px 24px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
 }
 
-.section-card:hover {
-    box-shadow: 0 6px 20px rgba(13, 59, 102, 0.06);
-    border-color: #cbd5e1;
-}
-
-/* عنوان قسم التقييم */
-.section-card h3 {
-    margin: 0 0 20px 0;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #0d3b66;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #f1f5f9;
-}
-
-/* ==========================================
-   2. حاوية المجالات والبنود (Domains Container)
-   ========================================== */
-#domainsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-/* تنسيق كارت المجال الفردي داخل الحاوية */
-.domain-block {
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 18px;
-    transition: background-color 0.2s ease;
-}
-
-.domain-block:hover {
-    background-color: #f1f5f9;
-}
-
-.domain-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 12px;
-}
-
-/* ==========================================
-   3. أزرار التحكم والإجراءات (Action Buttons)
-   ========================================== */
-.btn-group {
-    display: flex;
-    gap: 14px;
-    justify-content: flex-end;
-    margin-top: 28px;
-    padding-top: 16px;
-    border-top: 1px dashed #e2e8f0;
-}
-
-/* التنسيق الأساسي للأزرار */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: inherit;
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-/* زر استخراج التقرير (الزر الرئيسي) */
-.btn:not(.btn-save) {
-    background: linear-gradient(135deg, #0d3b66 0%, #195280 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(13, 59, 102, 0.2);
-}
-
-.btn:not(.btn-save):hover {
-    background: linear-gradient(135deg, #092c4d 0%, #124167 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(13, 59, 102, 0.3);
-}
-
-/* زر الحفظ التلقائي */
-.btn-save {
-    background: #ffffff;
-    color: #166534;
-    border: 1.5px solid #bbf7d0;
-    background-color: #f0fdf4;
-}
-
-.btn-save:hover {
-    background-color: #dcfce7;
-    border-color: #86efac;
-    color: #14532d;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(22, 101, 52, 0.12);
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-/* ==========================================
-   4. تجاوب الواجهة مع الشاشات الصغيرة (Responsive)
-   ========================================== */
-@media (max-width: 640px) {
-    .btn-group {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-    }
-}
-/* رأس البطاقة والعنوان */
-.card-header {
+.saved-section-header {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border-light);
+}
+
+.icon-badge {
+    width: 40px;
+    height: 40px;
+    background-color: #f0f7ff;
+    color: var(--primary-color);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.saved-title-group h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.saved-title-group p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.saved-section-body {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.select-wrapper {
+    position: relative;
+    flex: 2;
+    min-width: 240px;
+}
+
+.styled-select {
+    width: 100%;
+    padding: 11px 16px 11px 36px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background-color: #f8fafc;
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.styled-select:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.12);
+}
+
+.select-arrow {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--text-muted);
+    pointer-events: none;
+}
+
+/* 6. كارت شريط تقدم الجلسة الإجمالي */
+.assessment-progress-card {
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 14px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.progress-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.progress-title-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.progress-icon {
+    font-size: 1.1rem;
+}
+
+.progress-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.progress-percent-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--secondary);
+}
+
+.progress-track-bar {
+    width: 100%;
+    height: 9px;
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0284c7 0%, #16a34a 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+/* 7. شريط الإحصائيات الحية */
+.live-stats-bar {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.stat-chip {
+    flex: 1;
+    min-width: 190px;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.stat-chip.hyper {
+    border: 1px solid var(--hyper-border);
+    border-right: 5px solid var(--hyper-color);
+    background-color: var(--hyper-bg);
+}
+
+.stat-chip.hypo {
+    border: 1px solid var(--hypo-border);
+    border-right: 5px solid var(--hypo-color);
+    background-color: var(--hypo-bg);
+}
+
+.stat-chip.domains {
+    border: 1px solid #bae6fd;
+    border-right: 5px solid var(--secondary);
+    background-color: #f0f9ff;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.stat-value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+/* 8. بطاقات الإدخال والبيانات الأساسية */
+.section-card {
+    background: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 2px solid #f1f5f9;
+}
+
+.card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .header-icon {
     width: 38px;
     height: 38px;
     background-color: #e0f2fe;
-    color: #0369a1;
+    color: var(--secondary);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -523,25 +480,21 @@ body {
 }
 
 .card-header h3 {
-    margin: 0;
     font-size: 1.2rem;
     font-weight: 700;
-    color: #0d3b66;
+    color: var(--primary-color);
 }
 
-/* شبكة حقول الإدخال */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 18px 20px;
 }
 
-/* الحقول الممتدة بعرض الكامل */
 .full-width {
     grid-column: span 2;
 }
 
-/* مجموعة الحقل واللايبل */
 .input-group {
     display: flex;
     flex-direction: column;
@@ -555,18 +508,10 @@ body {
 }
 
 .required {
-    color: #e11d48;
+    color: var(--hyper-color);
     font-weight: bold;
 }
 
-/* حاويات عناصر الإدخال */
-.input-wrapper, 
-.select-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-/* تنسيق المدخلات القائمة والنصية */
 .input-group input[type="text"],
 .input-group input[type="date"],
 .input-group select {
@@ -574,831 +519,977 @@ body {
     padding: 11px 14px;
     font-size: 0.95rem;
     font-family: inherit;
-    color: #1e293b;
+    color: var(--text-main);
     background-color: #f8fafc;
-    border: 1.5px solid #cbd5e1;
+    border: 1.5px solid var(--border-color);
     border-radius: 9px;
     outline: none;
     box-sizing: border-box;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease;
 }
 
-/* تأثير التفاعل والتركيز Focus */
 .input-group input:focus,
 .input-group select:focus {
     background-color: #ffffff;
-    border-color: #0d3b66;
+    border-color: var(--primary-color);
     box-shadow: 0 0 0 3.5px rgba(13, 59, 102, 0.12);
 }
 
-/* السهم المخصص للقائمة المنسدلة */
-.select-wrapper {
-    position: relative;
-}
-
-.select-wrapper select {
-    appearance: none;
-    -webkit-appearance: none;
-    padding-left: 35px;
-    cursor: pointer;
-}
-
-.custom-arrow {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid #64748b;
-    pointer-events: none;
-}
-
-/* تجاوب الشبكة مع الشاشات الصغيرة والهواتف */
-@media (max-width: 640px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .full-width {
-        grid-column: span 1;
-    }
-}
-/* تنسيق شبكة حقول الإدخال */
-.form-grid {
-    /* استخدام نظام الشبكة CSS Grid */
-    display: grid;
-    /* توزيع الأعمدة بشكل تلقائي ومارن */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    /* الفجوة المسافية بين الحقول */
-    gap: 15px;
-}
-
-/* تنسيق العناوين التوضيحية للحقول */
-label {
-    /* سمك الخط عريض نسبياً */
-    font-weight: 600;
-    /* إظهار ككتلة منفصلة لتصبح فوق حقل الإدخال */
-    display: block;
-    /* هامش أسفل العنوان التوضيحي */
-    margin-bottom: 5px;
-    /* حجم الخط 14 بكسل */
-    font-size: 14px;
-}
-
-/* تنسيق عناصر إدخال البيانات الموحدة */
-input, select, textarea {
-    /* جعل العنصر يأخذ العرض الكامل للمساحة */
-    width: 100%;
-    /* حشو داخلي مناسب للمدخلات */
-    padding: 9px;
-    /* إطار رمادي حول المدخلات */
-    border: 1px solid #cbd5e1;
-    /* تدوير الحواف */
-    border-radius: 6px;
-    /* تضمين الحشو والإطار ضمن الحجم الكلي */
-    box-sizing: border-box;
-    /* حجم الخط داخل الحقول */
-    font-size: 14px;
-}
-
-/* تنسيق صف البند التقييمي الفردي */
-.item-row {
-    /* تفعيل نموذج العناصر المرنة Flexbox */
+/* 9. دليل طريقة التقييم السريع */
+.evaluation-quick-guide {
     display: flex;
-    /* توزيع المحتوى بين الطرفين */
-    justify-content: space-between;
-    /* محاذاة العناصر عمودياً في المنتصف */
-    align-items: center;
-    /* حشو علوي وسفلي للصف */
-    padding: 10px 0;
-    /* خط فاصل رمادي سفلي بين البنود */
-    border-bottom: 1px solid #f1f5f9;
-    /* الفجوة بين النص وقوائم الخيارات */
-    gap: 15px;
-}
-
-/* تنسيق النص التوضيحي داخل صف البند */
-.item-row span {
-    /* التمدد لتغطية المساحة المتاحة */
-    flex: 1;
-    /* حجم خط البند */
-    font-size: 14px;
-}
-
-/* حاوية قوائم التقييم والخيارات داخل الصف */
-.controls-group {
-    /* العرض بنظام المرونة Flexbox */
-    display: flex;
-    /* فجوة بين القوائم المنسدلة */
-    gap: 10px;
-    /* المحاذاة العمودية في المنتصف */
-    align-items: center;
-}
-
-/* ضبط حجم القوائم المنسدلة في البنود */
-.controls-group select {
-    /* العرض تلقائي حسب المحتوى */
-    width: auto;
-    /* الحد الأدنى لعرض القائمة المنسدلة */
-    min-width: 110px;
-}
-
-/* تنسيق صف إضافة البند اليدوي المخصص */
-.manual-row {
-    /* لون خلفية زرقاء فاتحة للتأكيد */
-    background-color: #f0f9ff;
-    /* حشو داخلي لبند الإضافة */
-    padding: 12px;
-    /* تدوير الزوايا */
-    border-radius: 6px;
-    /* هامش علوي */
-    margin-top: 10px;
-    /* إطار مقطع ملون */
-    border: 1px dashed var(--secondary);
-}
-
-/* تنسيق مجموعة الأزرار */
-.btn-group {
-    /* تفعيل التنسيق المرن */
-    display: flex;
-    /* فجوة بين الأزرار */
-    gap: 10px;
-    /* مسافة من الأعلى */
-    margin-top: 15px;
-    /* السماح بانتقال الأزرار للسطر التالي إذا ضاقت الشاشة */
+    gap: 16px;
+    background: #f8fafc;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 10px 16px;
+    margin-bottom: 18px;
+    font-size: 0.85rem;
     flex-wrap: wrap;
 }
 
-/* التنسيق الأساسي العام للأزرار */
-.btn {
-    /* لون الخلفية الثانوي الأزرق */
-    background-color: var(--secondary);
-    /* لون النص أبيض */
-    color: white;
-    /* إلغاء حدود الأزرار */
-    border: none;
-    /* الحشو الداخلي للأزرار */
-    padding: 12px 20px;
-    /* حجم خط الأزرار */
-    font-size: 15px;
-    /* سمك خط ثقيل */
-    font-weight: bold;
-    /* تدوير حواف الأزرار */
-    border-radius: 6px;
-    /* تغيير مؤشر الماوس إلى شكل اليد */
+.guide-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+}
+
+.guide-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.guide-dot.normal { background: var(--score-0); }
+.guide-dot.mild { background: var(--score-1); }
+.guide-dot.moderate { background: var(--score-2); }
+.guide-dot.severe { background: var(--score-3); }
+
+/* 10. شريط تبويبات المجالات التسعة (Tabs Bar) */
+.domain-tabs-wrapper {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+    scrollbar-width: thin;
+}
+
+.domain-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1.5px solid var(--border-light);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #475569;
     cursor: pointer;
-    /* المرونة في العرض لتوزيع المساحة */
-    flex: 1;
-    /* الحد الأدنى لعرض الزر */
-    min-width: 160px;
-    /* حركة انتقال ناعمة عند تغيير الألوان */
+    white-space: nowrap;
     transition: all 0.2s ease;
 }
 
-/* تأثير تحريك الماوس فوق الزر الرئيسي */
-.btn:hover { background-color: #0369a1; }
-/* التنسيق الخاص بزر PDF الهامشي وإخفاؤه المبدئي */
-.btn-pdf { background-color: var(--hyper-color); display: none; }
-/* تأثير التحويم لزر الـ PDF */
-.btn-pdf:hover { background-color: #be123c; }
-/* التنسيق الخاصزر الوورد وإخفاؤه المبدئي */
-.btn-word { background-color: var(--word-color); display: none; }
-/* تأثير التحويم لزر الوورد */
-.btn-word:hover { background-color: #1e3d6b; }
-/* زر الحفظ التلقائي */
-.btn-save { background-color: var(--success); }
-/* تأثير التحويم لزر الحفظ */
-.btn-save:hover { background-color: #15803d; }
-
-/* الحاوية الرئيسية لقسم السجل المحفوظ */
-.saved-section {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    padding: 22px 26px;
-    margin: 24px 0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    transition: all 0.3s ease;
-}
-
-.saved-section:hover {
-    box-shadow: 0 6px 20px rgba(13, 59, 102, 0.07);
+.domain-tab-btn:hover {
+    background: #e2e8f0;
     border-color: #cbd5e1;
 }
 
-/* رأس القسم والتحكم في الأيقونة والعنوان */
-.saved-section-header {
+.domain-tab-btn.active {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(13, 59, 102, 0.2);
+}
+
+.tab-badge {
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.domain-tab-btn.active .tab-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+.tab-badge.has-badge-difficulty {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+}
+
+/* شريط الفلترة والبحث المتقدم */
+.toolbar-filter-box {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 14px;
     margin-bottom: 18px;
-    padding-bottom: 14px;
-    border-bottom: 1px dashed #e2e8f0;
+    flex-wrap: wrap;
 }
 
-.icon-badge {
-    width: 42px;
-    height: 42px;
-    background-color: #f0f7ff;
-    color: #0d3b66;
-    border-radius: 10px;
+.filter-chips-group {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.saved-title-group h3 {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #0d3b66;
-}
-
-.saved-title-group p {
-    margin: 3px 0 0 0;
-    font-size: 0.85rem;
-    color: #64748b;
-}
-
-/* جسم القائمة والزر */
-.saved-section-body {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-/* تغليف وتنسيق القائمة المنسدلة */
-.select-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-.styled-select {
-    width: 100%;
-    padding: 12px 16px 12px 40px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: #1e293b;
-    background-color: #f8fafc;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 10px;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.styled-select:focus {
-    background-color: #ffffff;
-    border-color: #0d3b66;
-    box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.12);
-}
-
-.select-arrow {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 6px solid #64748b;
-    pointer-events: none;
-}
-
-/* تنسيق زر التحميل */
-.btn-primary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 8px;
-    background: linear-gradient(135deg, #0d3b66 0%, #195280 100%);
-    color: #ffffff;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 12px 22px;
-    border: none;
-    border-radius: 10px;
+}
+
+.filter-chip {
+    background: #f8fafc;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #475569;
     cursor: pointer;
-    transition: all 0.25s ease;
-    white-space: nowrap;
-    box-shadow: 0 3px 10px rgba(13, 59, 102, 0.2);
+    transition: all 0.2s;
 }
 
-.btn-primary:hover {
-    background: linear-gradient(135deg, #092c4d 0%, #124167 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(13, 59, 102, 0.3);
+.filter-chip.active {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
 }
 
-.btn-primary:active {
-    transform: translateY(0);
-}
-
-/* التجاوب مع الهواتف الذكية */
-@media (max-width: 640px) {
-    .saved-section-body {
-        flex-direction: column;
-    }
-    
-    .select-wrapper, 
-    .btn-primary {
-        width: 100%;
-    }
-}
-
-/* تنسيق صندوق ورقة التقرير المبدئي (مخفي حتى الطلب) */
-.report-box {
-    /* إخفاء التقرير في بداية الفتح */
-    display: none;
-    /* هامش علوي */
-    margin-top: 30px;
-}
-
-/* تنسيق أبعاد واجهة ورقة A4 للتقرير */
-.a4-page {
-    /* العرض الكامل المتاح */
+.search-input {
     width: 100%;
-    /* الحد الأقصى لعرض ورقة A4 قياسية */
-    max-width: 800px;
-    /* حشو التقرير الداخلي */
-    padding: 25px;
-    /* توسيط الورقة في المنتصف */
-    margin: 0 auto;
-    /* خلفية بيضاء صريحة للطباعة */
-    background: #ffffff;
-    /* إطار خفيف يحاكي أطراف الورقة */
-    border: 1px solid #cbd5e1;
-    /* حساب الحشو ضمن مقاس الورقة */
-    box-sizing: border-box;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
 }
 
-/* ترويسة ورقة التقرير A4 */
-.report-header {
-    /* تفعيل النظام المرن Horizontal */
+.search-input:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+/* 11. كتل وبنود التقييم التفاعلية الفورية */
+.domain-block {
+    background-color: #ffffff;
+    border: 1.5px solid var(--border-light);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.domain-header-bar {
     display: flex;
-    /* توزيع المحتوى للطرفين */
     justify-content: space-between;
-    /* المحاذاة العمودية في المنتصف */
     align-items: center;
-    /* خط أزرق أسفل الترويسة */
-    border-bottom: 2px solid #0284c7;
-    /* مسافة حشو من الأسفل */
-    padding-bottom: 8px;
-    /* مسافة خارجية من الأسفل */
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-/* صندوق تجميع الشعار واسم المركز */
-.logo-box {
-    /* محاذاة عناصر الشعار مرنًا */
+.domain-title-group {
     display: flex;
-    /* محاذاة الشعار والنص في المنتصف */
     align-items: center;
-    /* الفجوة بين الصورة والنص */
     gap: 10px;
 }
 
-/* أبعاد معاينة الشعار في التقرير */
-.logo-img-preview {
-    /* الحد الأقصى لعرض الصورة */
-    max-width: 60px;
-    /* الحد الأقصى لارتفاع الصورة */
-    max-height: 60px;
-    /* الحفاظ على تناسق أبعاد الشعار */
-    object-fit: contain;
+.domain-header-icon {
+    font-size: 1.3rem;
 }
 
-/* عنوان المركز في التقرير */
-.center-title h2 {
-    /* إلغاء الهوامش الإضافية */
-    margin: 0;
-    /* لون النص الداكن */
-    color: #1e293b;
-    /* حجم الخط */
-    font-size: 18px;
+.domain-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary-color);
 }
 
-/* نص التوصيف الفرعي للعنوان */
-.center-title p {
-    /* هامش علوي طفيف */
-    margin: 2px 0 0 0;
-    /* لون أزرق للعنوان الفرعي */
-    color: #0284c7;
-    /* خط عريض */
-    font-weight: bold;
-    /* حجم الخط */
-    font-size: 12px;
+.domain-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* جدول معلومات الطفل في التقرير */
-.info-table {
-    /* العرض الكامل المتاح */
-    width: 100%;
-    /* دمج حدود خلايا الجدول */
-    border-collapse: collapse;
-    /* هامش من الأسفل */
-    margin-bottom: 12px;
+.btn-micro {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-/* خلايا جدول المعلومات */
-.info-table td {
-    /* إطار خفيف حول الخلية */
-    border: 1px solid #cbd5e1;
-    /* حشو داخلي محدد */
-    padding: 5px 8px;
-    /* حجم الخط المطبوع */
-    font-size: 12px;
-    /* لون خلفية الخلايا خفيف */
+.btn-micro:hover {
+    background: #d1fae5;
+}
+
+.domain-count-badge {
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+/* صف البند التقييمي التفاعلي */
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    gap: 16px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.item-row:hover {
     background-color: #f8fafc;
 }
 
-/* عناوين الأقسام الرئيسية في التقرير المطبوع */
-.section-title {
-    /* حجم الخط */
-    font-size: 13px;
-    /* خط ثقيل بارز */
-    font-weight: bold;
-    /* لون الخط الأزرق */
-    color: #0284c7;
-    /* خط ملون أزرق جهة اليمين */
-    border-right: 3px solid #0284c7;
-    /* مسافة حشو يمين الإطار */
-    padding-right: 6px;
-    /* هامش من الأعلى */
-    margin-top: 10px;
-    /* هامش من الأسفل */
-    margin-bottom: 6px;
+.item-row.has-difficulty {
+    background-color: #fffbeb;
+    border-right: 4px solid #f59e0b;
 }
 
-/* تنسيق القوائم لفرط ونقص الاستجابة */
-.hyper-list, .hypo-list {
-    /* تدوير الحواف */
-    border-radius: 4px;
-    /* الحشو الداخلي للقائمة */
-    padding: 8px 15px;
-    /* هامش علوي */
-    margin-top: 4px;
-    /* حجم خط البنود */
-    font-size: 11px;
+.item-row[data-difficulty-level="3"] {
+    background-color: #fef2f2;
+    border-right: 4px solid #ef4444;
 }
 
-/* ألوان صندوق فرط الاستجابة */
-.hyper-list { background: #fff1f2; border: 1px solid #fecdd3; }
-/* لون نصوص فرط الاستجابة */
-.hyper-list li { color: #9f1239; margin-bottom: 3px; }
-
-/* ألوان صندوق نقص الاستجابة */
-.hypo-list { background: #eff6ff; border: 1px solid #bfdbfe; }
-/* لون نصوص نقص الاستجابة */
-.hypo-list li { color: #1e40af; margin-bottom: 3px; }
-
-/* أبعاد حاوية الرسم البياني الشارت */
-.chart-container {
-    /* وضع تموضع نسبي للتجاوب */
-    position: relative;
-    /* العرض الكامل للتقرير */
-    width: 100%;
-    /* الارتفاع المقيد للشارت لضمان تناسق A4 */
-    height: 220px;
-    /* التوسيط مع هامش علوي وسفلي */
-    margin: 8px auto;
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
 }
 
-/* تنسيق صندوق الخطة العلاجية والتوصيات */
-.plan-box {
-    /* خلفية خضراء هادئة */
-    background: #f0fdf4;
-    /* إطار أخضر فاتح */
-    border: 1px solid #bbf7d0;
-    /* حشو داخلي */
-    padding: 8px 15px;
-    /* تدوير الزوايا */
-    border-radius: 4px;
-    /* هامش من الأعلى */
-    margin-top: 6px;
-    /* حجم الخط */
-    font-size: 11px;
-}
-
-/* عناوين الأقسام والتصنيفات الحسية */
-.domain-title {
-    /* لون النص الأزرق */
-    color: var(--secondary);
-    /* خط بارز أيمن */
-    border-right: 4px solid var(--secondary);
-    /* مسافة حشو الجانب الأيمن */
-    padding-right: 10px;
-    /* هامش علوي */
-    margin-top: 20px;
-    /* هامش سفلي */
-    margin-bottom: 15px;
-}
-
-/* ==========================================
-   🖨️ الحل الجذري والنهائي للطباعة الخالية من الصفحات الفارغة
-   ========================================== */
-@media print {
-    /* 1. ضبط الصفحة A4 والهوامش */
-    @page {
-        size: A4 portrait;
-        margin: 12mm 10mm 12mm 10mm;
-    }
-
-    /* 2. إخفاء جسم الصفحة بالكامل وكل ما فيه لمنع حجز أي مساحات وهمية */
-    body {
-        background: #ffffff !important;
-        color: #000000 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    /* إخفاء كافة أبناء الـ body تماماً بواسطة display: none */
-    body > * {
-        display: none !important;
-    }
-
-    /* 3. إظهار الحاوية التي تحتوي على التقرير فقط وفك إخفائها */
-    body > #reportBox,
-    body > #reportContent,
-    body > main:has(#reportContent),
-    body > div:has(#reportContent) {
-        display: block !important;
-    }
-
-    /* إذا كان reportContent بداخله عناصر مخفية بـ display:none بالخطأ */
-    #reportBox, #reportBox * {
-        display: revert;
-    }
-
-    /* إخفاء عناصر التحكم والأزرار والمدخلات بشكل صريح داخل التقرير إن وجدت */
-    button, 
-    .no-print, 
-    nav, 
-    header, 
-    footer,
-    .btn,
-    input,
-    select {
-        display: none !important;
-    }
-
-    /* 4. تنسيق حاوية التقرير لتأخذ المساحة الطبيعية تماماً */
-    #reportContent {
-        display: block !important;
-        position: relative !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        box-shadow: none !important;
-        float: none !important;
-        left: auto !important;
-        top: auto !important;
-    }
-
-    /* 5. منع تقطيع العناصر والجداول داخل الصفحة */
-    tr, 
-    table, 
-    img, 
-    canvas,
-    .section-title,
-    .info-table, 
-    .chart-container, 
-    .hyper-list, 
-    .hypo-list, 
-    .plan-box, 
-    .report-header {
-        break-inside: avoid !important;
-        page-break-inside: avoid !important;
-    }
-
-    /* 6. تصفير الهوامش السفلية لأي عنصر في نهاية التقرير */
-    #reportContent > *:last-child,
-    #reportContent *:last-child {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-    }
-
-}
-.logo {
-  width: 130px;
-  height: 130px;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  background: var(--main);
-  color: #fff;
-  font-size: 24px;
-  font-weight: 900;
-}
-/* زر إعادة التوليد داخل التقرير */
-.btn-regenerate {
-    background-color: #f1f5f9;
-    color: #0d3b66;
-    border: 1px solid #cbd5e1;
-    padding: 6px 14px;
+.item-badge-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #f1f5f9;
+    color: #475569;
     border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.item-text {
+    font-size: 0.92rem;
+    color: #1e293b;
+    line-height: 1.5;
+}
+
+.highlight-search {
+    background: #fef08a;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+/* مجموعة أزرار التقييم التفاعلي السريع (Pills Group) */
+.controls-interactive-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.score-pills {
+    display: flex;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+}
+
+.score-pill {
+    padding: 6px 11px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    background: transparent;
+    color: #475569;
+    transition: all 0.15s ease;
 }
 
-.btn-regenerate:hover {
-    background-color: #e2e8f0;
-    color: #0284c7;
+.score-pill:hover {
+    background: rgba(0, 0, 0, 0.05);
 }
 
-/* إخفاء الزر أثناء الطباعة أو التصدير */
-@media print {
-    .no-print, .btn-regenerate {
-        display: none !important;
-    }
+.score-pill.pill-0.active {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
 }
-@media print {
-    /* إخفاء عناصر التحكم والأزرار والنموذج أثناء الطباعة */
-    #sensoryForm, 
-    .no-print, 
-    button, 
-    #pdfBtn, 
-    #wordBtn {
-        display: none !important;
-    }
 
-    /* إعدادات الصفحة A4 والهوامش */
-    @page {
-        size: A4 portrait;
-        margin: 15mm 10mm 15mm 10mm;
-    }
-
-    body {
-        background: #fff !important;
-        color: #000 !important;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 12pt;
-        line-height: 1.6;
-        direction: rtl;
-    }
-
-    /* تنسيق صندوق التقرير الرئيسي */
-    #reportBox {
-        display: block !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    /* فاصل صفحات أنيق بين التقرير والخطة العلاجية */
-    .page-break {
-        page-break-before: always;
-        break-before: page;
-    }
-
-    /* تنسيق صندوق الخطة العلاجية */
-    #planBox {
-        border: 1px solid #ddd !important;
-        padding: 15px !important;
-        border-radius: 6px !important;
-        background-color: #fafafa !important;
-    }
-
-    #planBox ul {
-        padding-right: 20px !important;
-        margin-bottom: 10px !important;
-    }
-
-    #planBox li {
-        margin-bottom: 8px !important;
-    }
-
-    /* تجنب قطع العناصر والفقرات بين الصفحات */
-    #planBox li, 
-    .report-section, 
-    canvas {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* ضبط عرض الرسم البياني للطباعة */
-    canvas {
-        max-width: 100% !important;
-        height: auto !important;
-    }
+.score-pill.pill-1.active {
+    background: #eab308;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(234, 179, 8, 0.3);
 }
-/* تنسيق الزر أثناء التحميل */
+
+.score-pill.pill-2.active {
+    background: #f97316;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(249, 115, 22, 0.3);
+}
+
+.score-pill.pill-3.active {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+}
+
+/* أزرار تبديل نوع الاستجابة */
+.type-pills {
+    display: flex;
+    background: #f1f5f9;
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+}
+
+.type-pill {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    font-family: inherit;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+    color: #64748b;
+    transition: all 0.15s ease;
+}
+
+.type-pill:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.type-pill.pill-hyper.active {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    font-weight: 800;
+}
+
+.type-pill.pill-hypo.active {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+    font-weight: 800;
+}
+
+/* البند اليدوي */
+.manual-row {
+    background-color: #f0f9ff;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-top: 14px;
+    border: 1.5px dashed var(--secondary);
+}
+
+.manual-label {
+    display: block;
+    color: var(--secondary);
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.manual-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.manual-input {
+    flex: 2;
+    min-width: 220px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.88rem;
+    outline: none;
+    font-family: inherit;
+}
+
+/* شريط التنقل السفلي بين التبويبات (Stepper Nav) */
+.tab-stepper-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-stepper.prev {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid var(--border-color);
+}
+
+.btn-stepper.prev:hover {
+    background: #e2e8f0;
+}
+
+.btn-stepper.next {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.btn-stepper.next:hover {
+    background: #1a4d7c;
+}
+
+.btn-stepper.finish {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.btn-quick-normal {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1.5px solid #a7f3d0;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-quick-normal:hover {
+    background: #d1fae5;
+}
+
+/* 12. أزرار التحكم والإجراءات العامة */
+.btn-group {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border-light);
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d3b66 0%, #1e4976 100%);
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #092c4d 0%, #163759 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(13, 59, 102, 0.25);
+}
+
+.btn-save {
+    background-color: var(--success-bg);
+    color: var(--success);
+    border: 1.5px solid var(--success-border);
+}
+
+.btn-save:hover {
+    background-color: #dcfce7;
+    border-color: #86efac;
+    transform: translateY(-1px);
+}
+
+.btn-reset {
+    background-color: #f8fafc;
+    color: #64748b;
+    border: 1.5px solid var(--border-color);
+}
+
+.btn-reset:hover {
+    background-color: #f1f5f9;
+    color: var(--hyper-color);
+}
+
+.btn-danger {
+    background-color: var(--hyper-bg);
+    color: var(--hyper-color);
+    border: 1.5px solid var(--hyper-border);
+}
+
+.btn-danger:hover {
+    background-color: #fee2e2;
+}
+
+.btn-pdf {
+    background: linear-gradient(135deg, #0d3b66 0%, #0369a1 100%);
+    color: #ffffff;
+}
+
+.btn-word {
+    background-color: var(--word-color);
+    color: #ffffff;
+}
+
+.btn-word:hover {
+    background-color: #1e3d6d;
+}
+
+/* مؤشر التحميل داخل الأزرار */
 .btn-loading {
     position: relative !important;
-    pointer-events: none !important; /* منع النقر المكرر */
+    pointer-events: none !important;
     opacity: 0.85;
-    cursor: wait !important;
-    transition: all 0.2s ease;
 }
 
-/* إخفاء النص الأصلي للزر أثناء التحميل مع الحفاظ على أبعاده */
-.btn-loading > .btn-text {
+.btn-loading > * {
     visibility: hidden;
-    opacity: 0;
 }
 
-/* مؤشر الدوران الاحترافي داخل الزر */
 .btn-loading::after {
     content: "";
     position: absolute;
     width: 18px;
     height: 18px;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
     border: 2px solid transparent;
-    border-top-color: currentColor; /* يأخذ نفس لون نص الزر */
-    border-right-color: currentColor;
+    border-top-color: #ffffff;
+    border-right-color: #ffffff;
     border-radius: 50%;
-    animation: button-spinner 0.6s linear infinite;
+    animation: btn-spin 0.6s linear infinite;
 }
 
-/* أنيميشن الدوران */
-@keyframes button-spinner {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+@keyframes btn-spin {
+    to { transform: rotate(360deg); }
 }
 
-/* تنسيق جدول الخطة العلاجية */
-#planBox table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 15px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    border: 1px solid #e2e8f0;
+/* 13. صندوق ورقة التقرير المطبوع A4 */
+.report-box {
+    display: none;
+    margin: 30px auto;
+    max-width: 860px;
     direction: rtl;
-    font-family: system-ui, -apple-system, sans-serif;
 }
 
-#planBox th {
-    background-color: #00838f;
-    color: #ffffff;
-    padding: 14px 12px;
-    font-size: 14px;
+.a4-page {
+    background: #ffffff;
+    width: 100%;
+    padding: 25mm 20mm;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-light);
+    box-sizing: border-box;
+    color: var(--text-main);
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2.5px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.report-header .logo-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.report-header .logo-img-preview {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+}
+
+.center-title h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+.center-title p {
+    margin: 2px 0 0 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.report-unit-tag {
+    font-size: 0.85rem;
+    color: var(--secondary);
     font-weight: 700;
-    text-align: right;
-    border-bottom: 2px solid #006064;
-    white-space: nowrap;
+    background: #f0f9ff;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #bae6fd;
 }
 
-#planBox td {
-    padding: 12px 14px;
+.report-main-title {
+    text-align: center;
+    color: var(--text-main);
+    margin: 12px 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    background: #f8fafc;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+.info-table td {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-light);
     color: #334155;
-    font-size: 13px;
-    line-height: 1.6;
-    border-bottom: 1px solid #f1f5f9;
-    vertical-align: top;
 }
 
-/* التناوب بين ألوان الصفوف */
-#planBox tbody tr:nth-child(even) {
+.info-table td strong {
+    color: var(--primary-color);
+}
+
+.section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 16px 0 10px 0;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    margin-bottom: 16px;
+    background-color: #ffffff;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.hypo-list, .hyper-list {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.hypo-list {
+    border-right: 4px solid var(--hypo-color);
+    background-color: var(--hypo-bg);
+}
+
+.hyper-list {
+    border-right: 4px solid var(--hyper-color);
+    background-color: var(--hyper-bg);
+}
+
+.hypo-list ul, .hyper-list ul {
+    margin: 0;
+    padding-right: 18px;
+}
+
+.hypo-list li { color: #1e40af; margin-bottom: 4px; }
+.hyper-list li { color: #991b1b; margin-bottom: 4px; }
+
+.plan-box {
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+
+.plan-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 0.82rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.plan-table th {
+    background: var(--primary-color);
+    color: #ffffff;
+    padding: 10px 8px;
+    font-weight: 700;
+    border: 1px solid #1e4976;
+    text-align: right;
+    font-size: 0.82rem;
+}
+
+.plan-table td {
+    padding: 9px 8px;
+    border: 1px solid var(--border-light);
+    color: #334155;
+    vertical-align: top;
+    line-height: 1.5;
+}
+
+.plan-table tr:nth-child(even) td {
     background-color: #f8fafc;
 }
 
-#planBox tbody tr:hover {
-    background-color: #f1f5f9;
-    transition: background-color 0.2s ease;
+.plan-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
-/* العمود الأول (#) */
-#planBox td:first-child, 
-#planBox th:first-child {
+.plan-tag.hyper {
+    background-color: var(--hyper-bg);
+    color: var(--hyper-color);
+    border: 1px solid var(--hyper-border);
+}
+
+.plan-tag.hypo {
+    background-color: var(--hypo-bg);
+    color: var(--hypo-color);
+    border: 1px solid var(--hypo-border);
+}
+
+.report-footer-signatures {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border-top: 1.5px solid var(--border-light);
+    padding-top: 12px;
+}
+
+.report-footer-center {
+    margin-top: 16px;
     text-align: center;
-    width: 40px;
-    font-weight: bold;
-    color: #00838f;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    border-top: 1px dashed var(--border-light);
+    padding-top: 8px;
 }
 
-/* إزالة الحدود من الصف الأخير */
-#planBox tbody tr:last-child td {
-    border-bottom: none;
+/* 14. نظام الطباعة المتكامل والدقيق (Zero Empty Pages) */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 12mm 10mm 12mm 10mm;
+    }
+
+    *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        font-size: 10pt !important;
+        line-height: 1.5 !important;
+    }
+
+    .sticky-assessment-bar,
+    .app-header,
+    .saved-section,
+    .assessment-progress-card,
+    .live-stats-bar,
+    #sensoryForm,
+    .btn-group,
+    .domain-tabs-wrapper,
+    .toolbar-filter-box,
+    .tab-stepper-nav,
+    .no-print,
+    button,
+    input,
+    select {
+        display: none !important;
+    }
+
+    .main-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        max-width: 100% !important;
+    }
+
+    .report-box {
+        display: block !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .a4-page {
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .report-header,
+    .info-table,
+    .chart-container,
+    .section-title,
+    .hyper-list,
+    .hypo-list,
+    .plan-table tr,
+    .report-footer-signatures {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .chart-container {
+        height: 200px !important;
+    }
+}
+
+/* 15. التجاوب الكامل مع الهواتف والأجهزة اللوحية (iPads / Tablets) */
+@media (max-width: 840px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-container {
+        padding: 16px;
+    }
+
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+    }
+
+    .header-text {
+        align-items: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full-width {
+        grid-column: span 1;
+    }
+
+    .saved-section-body {
+        flex-direction: column;
+    }
+
+    .select-wrapper, .btn {
+        width: 100%;
+    }
+
+    .item-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .controls-interactive-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .score-pills, .type-pills {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .score-pill, .type-pill {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+    }
+
+    .tab-stepper-nav {
+        flex-direction: column;
+    }
+
+    .btn-stepper, .btn-quick-normal {
+        width: 100%;
+        justify-content: center;
+    }
 }
