@@ -1,279 +1,351 @@
-<!-- تحديد نوع المستند كـ HTML5 -->
 <!DOCTYPE html>
-<!-- تحديد اللغة العربية واتجاه النص من اليمين إلى اليسار -->
 <html lang="ar" dir="rtl">
 <head>
-    <!-- تحديد ترميز الأحرف بدعم اللغة العربية -->
     <meta charset="UTF-8">
-    <!-- ضبط أبعاد الشاشة لتوافق الأجهزة المحمولة -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- عنوان الصفحة المكتوب في لسان المتصفح -->
-    <title>نظام تقييم التكامل الحسي الشامل - مركز القمة للتدريب</title>
+    <title>نظام تقييم التكامل الحسي المتقدم - مركز القمة للتدريب والتأهيل</title>
 
-    <!-- استدعاء مكتبة Chart.js لإنشاء الرسوم البيانية -->
+    <!-- استدعاء مكتبة Chart.js لإنشاء الرسوم البيانية المتطورة -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- ربط ملف التنسيقات الخارجية CSS -->
-    <link rel="stylesheet" href="style.css">
     
+    <!-- ربط ملف التنسيقات الخارجية المحدث والشامل -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- شريط الإجراءات والتقييم العائم اللاصق (Sticky Assessment Action Bar) -->
+<div id="stickyAssessmentBar" class="sticky-assessment-bar no-print">
+    <div class="sticky-content">
+        <div class="sticky-info-group">
+            <span class="sticky-badge">👤 الطفل: <strong id="stickyChildName">غير محدد</strong></span>
+            <span class="sticky-badge-sub">📊 الإنجاز: <strong id="stickyProgressPercent">0%</strong></span>
+            <span class="sticky-badge-sub difficulty" id="stickyDifficultyCount">0 صعوبة مسجلة</span>
+        </div>
+        <div class="sticky-actions-group">
+            <button type="button" class="btn btn-sticky-primary" id="stickyBtnGenerate" onclick="generateFullReport()">
+                📊 استخراج التقرير
+            </button>
+            <button type="button" class="btn btn-sticky-save" onclick="saveChildData()">
+                💾 حفظ
+            </button>
+            <button type="button" class="btn btn-sticky-scroll" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="الرجوع لأعلى الصفحة">
+                ⬆️ الأعلى
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- الحاوية الرئيسية للتطبيق -->
 <div class="main-container">
-    <!-- رأس الواجهة الرئيسي -->
+
+    <!-- 1. رأس الواجهة الرئيسي للمركز -->
     <header class="app-header">
         <div class="header-content">
-            <!-- الشعار -->
+            <!-- الشعار الرسمي للمركز -->
             <div class="logo-wrapper">
-                <img class="app-logo" src="logo.png" alt="شعار مركز القمة للتدريب والتأهيل">
+                <img class="app-logo" src="logo.png" alt="شعار مركز القمة للتدريب والتأهيل" onerror="this.src=LOCAL_LOGO_PATH">
             </div>
             
-            <!-- النص والعناوين -->
+            <!-- النصوص التعريفية -->
             <div class="header-text">
-                <span class="badge">مركز القمة للتدريب والتأهيل</span>
+                <span class="badge">مركز القمة للتدريب والتأهيل - طنطا</span>
                 <h1 class="main-title">برنامج تقييم التكامل الحسي المتقدم</h1>
                 <p class="subtitle">
-                    <i class="icon-analytics"></i> نظام التقرير الموثق والتحليل البياني الذكي
+                    نظام التقييم الإكلينيكي الشامل (9 أنظمة حسية) والتحليل البياني وبناء الخطة العلاجية
                 </p>
             </div>
         </div>
     </header>
-    <!-- قسم سجل الأطفال المسجلين -->
-<div class="saved-section">
-    <div class="saved-section-header">
-        <div class="icon-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                <path d="M12 11v6"></path>
-                <path d="M9 14h6"></path>
-            </svg>
-        </div>
-        <div class="saved-title-group">
-            <h3>سجل الأطفال المسجلين</h3>
-            <p>اختر ملف الطفل للتقييم، تعديل البيانات، أو استخراج التقرير</p>
-        </div>
-    </div>
 
-    <div class="saved-section-body">
-        <div class="select-wrapper">
-            <select id="savedChildrenSelect" class="styled-select">
-                <option value="">-- اختر طفلاً لعرض تقريره أو تعديله --</option>
-            </select>
-            <span class="select-arrow"></span>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="loadSelectedChild()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            <span>تحميل البيانات</span>
-        </button>
-    </div>
-</div>
-
-    <!-- نموذج إدخال البيانات والتقييم الحسي -->
-<form id="sensoryForm" onsubmit="return false;">
-    <!-- بطاقة البيانات الأساسية للطفل -->
-    <div class="section-card">
-        <!-- عنوان قسم البيانات الشخصية -->
-        <div class="card-header">
-            <div class="header-icon">
+    <!-- 2. قسم سجل وملفات الأطفال المحفوظة -->
+    <section class="saved-section">
+        <div class="saved-section-header">
+            <div class="icon-badge">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <path d="M12 11v6"></path>
+                    <path d="M9 14h6"></path>
                 </svg>
             </div>
-            <h3>البيانات الأساسية للطفل</h3>
+            <div class="saved-title-group">
+                <h3>سجل ملفات الأطفال المحفوظة</h3>
+                <p>اختر ملف الطفل المسجل مسبقاً لاسترجاع بياناته، تعديل التقييم، أو استخراج التقارير</p>
+            </div>
         </div>
 
-        <!-- شبكة توزيع حقول الإدخال -->
-        <div class="form-grid">
-            <!-- حقل إدخال اسم الطفل -->
-            <div class="input-group">
-                <label for="childName">اسم الطفل <span class="required">*</span></label>
-                <div class="input-wrapper">
-                    <input type="text" id="childName" required placeholder="أدخل الاسم الرباعي">
+        <div class="saved-section-body">
+            <div class="select-wrapper">
+                <select id="savedChildrenSelect" class="styled-select">
+                    <option value="">-- اختر طفلاً من السجل لاسترجاع تقييمه --</option>
+                </select>
+                <span class="select-arrow"></span>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="loadSelectedChild()" title="تحميل التقييم المسجل">
+                📥 تحميل البيانات
+            </button>
+            <button type="button" class="btn btn-danger" onclick="deleteSelectedChild()" title="حذف ملف الطفل المحدد من السجل">
+                🗑️ حذف الملف
+            </button>
+            <button type="button" class="btn btn-reset" onclick="resetEvaluationForm()" title="بدء جلسة تقييم جديدة وتفريغ الحقول">
+                🔄 تقييم جديد
+            </button>
+        </div>
+    </section>
+
+    <!-- 3. شريط المؤشرات الحية ومتابعة نسبة الإنجاز الكلي -->
+    <div class="assessment-progress-card">
+        <div class="progress-info-row">
+            <div class="progress-title-box">
+                <span class="progress-icon">📈</span>
+                <span class="progress-title">مؤشر التقدم في جلسة التقييم:</span>
+            </div>
+            <div class="progress-percent-val" id="assessmentProgressPercent">0%</div>
+        </div>
+        <div class="progress-track-bar">
+            <div class="progress-fill-bar" id="assessmentProgressFill" style="width: 0%;"></div>
+        </div>
+    </div>
+
+    <!-- شريط الإحصاءات الفورية للدرجات والأنظمة المتأثرة -->
+    <div class="live-stats-bar">
+        <div class="stat-chip hyper">
+            <span class="stat-label">🔴 فرط استجابة / تجنب:</span>
+            <span class="stat-value" id="liveHyperCount">0 بند (0 درجات)</span>
+        </div>
+        <div class="stat-chip hypo">
+            <span class="stat-label">🔵 نقص استجابة / بحث:</span>
+            <span class="stat-value" id="liveHypoCount">0 بند (0 درجات)</span>
+        </div>
+        <div class="stat-chip domains">
+            <span class="stat-label">📊 الأنظمة المتأثرة:</span>
+            <span class="stat-value" id="liveDomainsCount">0 من 9</span>
+        </div>
+    </div>
+
+    <!-- 4. نموذج إدخال البيانات والتقييم الحسي المتكامل -->
+    <form id="sensoryForm" onsubmit="return false;">
+        
+        <!-- بطاقة البيانات الأساسية للطفل -->
+        <div class="section-card">
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="header-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3>البيانات الأساسية للطفل والفحص</h3>
                 </div>
             </div>
 
-            <!-- حقل إدخال عمر الطفل -->
-            <div class="input-group">
-                <label for="childAge">العمر (سنوات / أشهر) <span class="required">*</span></label>
-                <div class="input-wrapper">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="childName">اسم الطفل الرباعي <span class="required">*</span></label>
+                    <input type="text" id="childName" required placeholder="أدخل اسم الطفل كاملاً">
+                </div>
+
+                <div class="input-group">
+                    <label for="childAge">العمر الزمني (سنوات / شهور) <span class="required">*</span></label>
                     <input type="text" id="childAge" required placeholder="مثال: 5 سنوات و 3 أشهر">
                 </div>
-            </div>
 
-            <!-- حقل اختيار جنس الطفل -->
-            <div class="input-group">
-                <label for="childGender">الجنس</label>
-                <div class="select-wrapper">
+                <div class="input-group">
+                    <label for="childGender">الجنس</label>
                     <select id="childGender">
                         <option value="ذكر">ذكر</option>
                         <option value="أنثى">أنثى</option>
                     </select>
-                    <span class="custom-arrow"></span>
                 </div>
-            </div>
 
-            <!-- حقل اختيار تاريخ التقييم -->
-            <div class="input-group">
-                <label for="evalDate">تاريخ التقييم <span class="required">*</span></label>
-                <div class="input-wrapper">
+                <div class="input-group">
+                    <label for="evalDate">تاريخ الفحص / الجلسة <span class="required">*</span></label>
                     <input type="date" id="evalDate" required>
                 </div>
-            </div>
 
-            <!-- حقل إدخال اسم الأخصائي -->
-            <div class="input-group full-width">
-                <label for="evaluator">اسم الأخصائي المتابع <span class="required">*</span></label>
-                <div class="input-wrapper">
+                <div class="input-group full-width">
+                    <label for="evaluator">اسم الأخصائي الفاحص المعتمد <span class="required">*</span></label>
                     <input type="text" id="evaluator" required placeholder="أدخل اسم الأخصائي المسؤول">
                 </div>
             </div>
         </div>
-    </div>
-</form>
-        <!-- بطاقة استمارة البنود الحسية -->
+
+        <!-- بطاقة استمارة البنود الحسية بنظام التبويبات والأزرار السريعة -->
         <div class="section-card">
-            <!-- عنوان استمارة البنود -->
-            <h3>📊 استمارة التقييم للأنظمة الحسية (8 مجالات)</h3>
-            <!-- حاوية يتم ديناميكياً بناء بنود المجالات فيها عبر JavaScript -->
+            <div class="card-header">
+                <div class="card-header-left">
+                    <div class="header-icon" style="background-color: #fef3c7; color: #d97706;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3>استمارة التقييم السريع للأنظمة الحسية (9 أنظمة معتمدة)</h3>
+                </div>
+            </div>
+
+            <!-- دليل طريقة التقييم السريع للأخصائي -->
+            <div class="evaluation-quick-guide">
+                <div class="guide-item">
+                    <span class="guide-dot normal">0</span>
+                    <span><b>طبيعي:</b> أداء حسي متوازن متناسب مع العمر.</span>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-dot mild">1</span>
+                    <span><b>بسيط:</b> صعوبة عابرة لا تعطل الأداء الوظيفي اليومي.</span>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-dot moderate">2</span>
+                    <span><b>متوسط:</b> صعوبة واضحة تعيق بعض الأنشطة اليومية.</span>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-dot severe">3</span>
+                    <span><b>شديد:</b> اضطراب حاد يؤثر بشدة على التنظيم الذاتي والتعلم.</span>
+                </div>
+            </div>
+
+            <!-- شريط تبويبات المجالات التسعة -->
+            <div id="domainTabsContainer" class="domain-tabs-wrapper">
+                <!-- يتم بناؤه ديناميكياً بواسطة JavaScript -->
+            </div>
+
+            <!-- شريط أدوات الفلترة والبحث المتقدم -->
+            <div class="toolbar-filter-box">
+                <div class="filter-chips-group">
+                    <button type="button" class="filter-chip active" id="filter_all" onclick="setFilterView('all')">
+                        📋 جميع البنود
+                    </button>
+                    <button type="button" class="filter-chip" id="filter_affected" onclick="setFilterView('affected')">
+                        ⚠️ البنود المتأثرة فقط (> 0)
+                    </button>
+                </div>
+
+                <div class="search-bar-box" style="margin-bottom: 0; flex: 1; min-width: 250px;">
+                    <input type="text" id="domainSearchInput" class="search-input" placeholder="🔍 بحث سريع في البنود بالكلمة المفتاحية..." oninput="renderDomainsForm(this.value)">
+                </div>
+            </div>
+
+            <!-- حاوية استعراض المجالات المبنية ديناميكياً بنظام الأزرار السريعة -->
             <div id="domainsContainer"></div>
+
+            <!-- شريط التنقل السفلي بين التبويبات (السابق / إكمال كطبيعي / التالي) -->
+            <div id="tabStepperNav" class="tab-stepper-nav"></div>
         </div>
 
-        <!-- مجموعة أزرار التفاعل والإجراءات -->
+        <!-- أزرار الإجراءات الرئيسية -->
         <div class="btn-group">
-            <!-- زر استخراج التقرير والرسوم البيانية -->
-            <button type="button" class="btn" onclick="generateFullReport()">استخراج التقرير والتحليل البياني 📊</button>
-            <!-- زر حفظ بيانات النموذج تلقائياً -->
-            <button type="button" class="btn btn-save" onclick="saveChildData()">حفظ البيانات تلقائياً 💾</button>
+            <button type="button" class="btn btn-primary" id="btnMainGenerate" onclick="generateFullReport()">
+                <span>📊 استخراج التقرير والتحليل البياني وبناء الخطة</span>
+            </button>
+            <button type="button" class="btn btn-save" onclick="saveChildData()">
+                <span>💾 حفظ التقييم في السجل المحلي</span>
+            </button>
+            <button type="button" class="btn btn-reset" onclick="resetEvaluationForm()">
+                <span>🔄 تفريغ النموذج</span>
+            </button>
         </div>
     </form>
 
-    <!-- صندوق التقرير النهائي القابل للطباعة -->
+    <!-- 5. صندوق التقرير النهائي القابل للطباعة والمعاينة -->
     <div id="reportBox" class="report-box">
-        <!-- صفحة التقرير بتنسيق A4 -->
+        <!-- صفحة التقرير بتنسيق A4 الطبي -->
         <div class="a4-page" id="reportContent">
+            
             <!-- ترويسة التقرير الرسمية -->
             <div class="report-header">
-                <!-- حاوية الشعار والعنوان -->
                 <div class="logo-box">
-                    <!-- عنصر شعار المركز مع إخفاء تلقائي في حالة عدم الوجود -->
-                    <img id="reportLogoImg" src="logo.png" class="logo-img-preview" alt="شعار المركز" onerror="this.style.display='none'">
-                    <!-- عنوان وتفاصيل المركز -->
+                    <img id="reportLogoImg" src="logo.png" class="logo-img-preview" alt="شعار المركز" onerror="this.src=LOCAL_LOGO_PATH">
                     <div class="center-title">
-                        <!-- اسم المركز -->
-                        <h2> مركز القمة  للتدريب والتأهيل  </h2>
-                        <!-- اسم المركز بالإنجليزية -->
-                        <p>AL-QAMMA TRAINING CENTER</p>
+                        <h2>مركز القمة للتدريب والتأهيل</h2>
+                        <p>AL-QAMMA TRAINING & REHABILITATION CENTER</p>
                     </div>
                 </div>
-                <!-- اسم القسم الفني للتقرير -->
-                <div style="text-align: left;">
-                    <!-- نص يوضح اسم الوحدة المختصة -->
-                    <span style="font-size: 11px; color: #64748b;">وحدة العلاج الوظيفي والتكامل الحسي </span>
+                <div>
+                    <span class="report-unit-tag">وحدة العلاج الوظيفي والتكامل الحسي</span>
                 </div>
             </div>
 
-            <!-- عنوان التقرير الرئيسي المطبوع -->
-            <h3 style="text-align: center; color: #1e293b; margin-top: 0; margin-bottom: 8px; font-size: 15px;">التقرير الشامل لتقييم التكامل الحسي (8 مجالات)</h3>
+            <div class="report-main-title">
+                التقرير الكلينيكي الشامل لتقييم التكامل الحسي (9 أنظمة حسية)
+            </div>
 
-            <!-- جدول ملخص بيانات الطفل -->
+            <!-- جدول بيانات الطفل -->
             <table class="info-table">
-                <!-- الصف الأول للجدول -->
                 <tr>
-                    <!-- خلية اسم الطفل -->
                     <td><strong>اسم الطفل:</strong> <span id="rName"></span></td>
-                    <!-- خلية عمر الطفل -->
-                    <td><strong>العمر:</strong> <span id="rAge"></span></td>
+                    <td><strong>العمر الزمني:</strong> <span id="rAge"></span></td>
                 </tr>
-                <!-- الصف الثاني للجدول -->
                 <tr>
-                    <!-- خلية جنس الطفل -->
                     <td><strong>الجنس:</strong> <span id="rGender"></span></td>
-                    <!-- خلية تاريخ التقييم -->
                     <td><strong>تاريخ التقييم:</strong> <span id="rDate"></span></td>
                 </tr>
-                <!-- الصف الثالث للجدول -->
                 <tr>
-                    <!-- خلية دمج لاسم الأخصائي -->
-                    <td colspan="2"><strong>الأخصائي الفاحص:</strong> <span id="rEvaluator"></span></td>
+                    <td colspan="2"><strong>الأخصائي الفاحص المعتمد:</strong> <span id="rEvaluator"></span></td>
                 </tr>
             </table>
 
-            <!-- عنوان قسم الرسم البياني -->
-            <div class="section-title">📈 التحليل البياني بالأعمدة (فرط الاستجابة مقابل نقص الاستجابة)</div>
-            
-            <!-- حاوية لوحة الرسم البياني للشارت -->
+            <!-- قسم الرسم البياني التحليلي -->
+            <div class="section-title">
+                📈 التحليل البياني المقارن (فرط الاستجابة والتجنب مقابل نقص الاستجابة والبحث الحسي)
+            </div>
             <div class="chart-container">
-                <!-- عنصر كانفاس لرسم الشارت بواسطة Chart.js -->
                 <canvas id="sensoryChart"></canvas>
             </div>
 
-            <!-- عنوان قسم استجابات نقص الحس -->
-            <div class="section-title" style="color: var(--hypo-color); border-color: var(--hypo-color);">🔵 أولاً: عناصر نقص الاستجابة / خمول وبحث حسي (Hypo-responsiveness)</div>
-            <!-- صندوق قائمة عناصر نقص الاستجابة -->
+            <!-- قسم عناصر نقص الاستجابة -->
+            <div class="section-title" style="color: var(--hypo-color); border-color: var(--hypo-color);">
+                🔵 أولاً: مؤشرات نقص الاستجابة / خمول وبحث حسي (Hypo-responsiveness & Sensory Seeking)
+            </div>
             <div class="hypo-list">
-                <!-- قائمة غير مرتبة للبث الديناميكي بعناصر نقص الاستجابة -->
-                <ul id="hypoList" style="margin:0; padding-right:15px;"></ul>
+                <ul id="hypoList"></ul>
             </div>
 
-            <!-- عنوان قسم استجابات فرط الحس -->
-            <div class="section-title" style="color: var(--hyper-color); border-color: var(--hyper-color);">🔴 ثانياً: عناصر فرط الاستجابة / التجنب الحسي (Hyper-responsiveness)</div>
-            <!-- صندوق قائمة عناصر فرط الاستجابة -->
+            <!-- قسم عناصر فرط الاستجابة -->
+            <div class="section-title" style="color: var(--hyper-color); border-color: var(--hyper-color);">
+                🔴 ثانياً: مؤشرات فرط الاستجابة / التجنب والانزعاج الحسي (Hyper-responsiveness & Sensory Avoiding)
+            </div>
             <div class="hyper-list">
-                <!-- قائمة غير مرتبة للبث الديناميكي بعناصر فرط الاستجابة -->
-                <ul id="hyperList" style="margin:0; padding-right:15px;"></ul>
+                <ul id="hyperList"></ul>
             </div>
 
-            <!-- عنوان قسم التوصيات والبرنامج -->
-            <div class="section-title">📝  الخطة العلاجية والتوصيات المخصصة تحت اشراف اخصائى تكامل حسي</div>
-            <!-- صندوق نص الخطة العلاجية الديناميكية -->
-            <div class="plan-box" id="planBox"></div>
-
-            <!-- ذيل ورقة التقرير المخصصة للتوقيعات -->
-             
-            <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px;">
-                <!-- توقيع الأخصائي -->
-                <span>توقيع الأخصائي: ...........................</span>
-                <!-- توقيع مدير المركز -->
-                <span>اعتماد مدير المركز: ....................................</span>
+            <!-- قسم الخطة العلاجية والتوصيات -->
+            <div class="section-title" style="color: var(--success); border-color: var(--success);">
+                📝 ثالثاً: الخطة العلاجية وبرنامج الحمية الحسية المخصصة (Sensory Diet Intervention Plan)
             </div>
-            <div style="margin-top: 20px; display: flex; justify-content: center; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px;">
-                 <span> مركز القمه للتدريب والتاهيل  طنطا ش حسن رضوان اعلى صيدليه الولاء ت: 01555323662 </span>
+            <div class="plan-box" id="planBox">
+                <!-- جدول الخطة العلاجية يولد تلقائياً هنا -->
+            </div>
+
+            <!-- توقيعات الاعتماد -->
+            <div class="report-footer-signatures">
+                <span>توقيع الأخصائي الفاحص: .............................</span>
+                <span>اعتماد مدير المركز: د. محمد علي غراب</span>
+            </div>
+
+            <!-- ذيل العنوان الرسمي للمركز -->
+            <div class="report-footer-center">
+                مركز القمة للتدريب والتأهيل | طنطا - شارع حسن رضوان بجوار أسواق المنشاوي أعلى صيدلية الولاء | ت: 01555323662
             </div>
         </div>
-<!-- أضف هذا الزر في ملف HTML أسفل النموذج أو الأسئلة -->
-<div style="text-align: center; margin: 25px 0;">
-    <button type="button" id="btnGenerateReport" onclick="generateFullReport()" style="padding: 12px 25px; background-color: #0d3b66; color: #fff; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">
-        📋 توليد التقرير والخطة العلاجية بالذكاء الاصطناعي
-    </button>
-</div>
 
-<!-- مكان عرض التقرير والخطة -->
-<div id="reportBox" style="display: none; margin-top: 20px;">
-    <!-- مكان عرض الخطة العلاجية المحدثة عبر Gemini -->
-    <div id="planBox"></div>
-</div>
-        <!-- أزرار التصدير والطباعة الخارجية للتقرير -->
-        <div class="btn-group" style="margin-top: 15px; max-width: 800px; margin-left: auto; margin-right: auto;">
-            <!-- زر الطباعة وحفظ كـ PDF المباشر -->
-            <button type="button" class="btn btn-pdf" id="pdfBtn" onclick="exportToPDF()">طباعة / حفظ كـ PDF 🖨️</button>
-            <!-- زر التصدير إلى ملف Word -->
-            <button type="button" class="btn btn-word" id="wordBtn" onclick="exportToWord()">تصدير كملف Word 📝</button>
+        <!-- أزرار الطباعة والتصدير الخارجي -->
+        <div class="btn-group no-print" style="margin-top: 18px; max-width: 860px; margin-left: auto; margin-right: auto;">
+            <button type="button" class="btn btn-pdf" id="pdfBtn" onclick="exportToPDF()">
+                🖨️ طباعة / حفظ كـ PDF مباشر
+            </button>
+            <button type="button" class="btn btn-word" id="wordBtn" onclick="exportToWord()">
+                📝 تصدير التقرير كملف Word
+            </button>
         </div>
     </div>
-</div>
-<!-- استدعاء ملف البنود والبيانات أولاً -->
-    <script src="items-data.js"></script>
 
-    <!-- ثم استدعاء الملف الأساسي المشتمل على باقي الدوال وGemini -->
-    <script src="main-script.js"></script>
-<!-- ربط ملف البرمجة والتفاعل السلوكي JavaScript -->
+</div>
+
+<!-- استدعاء ملف البيانات والبنود أولاً -->
+<script src="items-data.js"></script>
+<!-- استدعاء ملف البرمجة والمعالجة المنطقية والتحليل -->
 <script src="script.js"></script>
+
 </body>
 </html>
-    <!-- باقي محتوى التطبيق يوضع هنا -->
-</div>
